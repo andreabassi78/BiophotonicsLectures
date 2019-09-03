@@ -11,12 +11,22 @@ import time
 from EwaldSphere.AmplitudeTransferFunction import amplitude_transfer_function
 from xlrd.formula import num2strg
 
+def colorbar(mappable):
+    '''Auxiliary function to plot the colorbar in scale'''
+    from mpl_toolkits.axes_grid1 import make_axes_locatable
+    ax = mappable.axes
+    fig = ax.figure
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="5%", pad=0.05)
+    return fig.colorbar(mappable, cax=cax)
+
+
 Kmax = 4.0    # maximum value of K in the K space
 N = 300     # sampling number
 K = 1.0     # radius of the Ewald sphere K=n/lambda
 
-NA = 0.7   # numerical aperture
-n = 1.0       # refractive index
+NA = 0.7    # numerical aperture
+n = 1.0     # refractive index
 
 Detection_Mode = 'standard'
 #choose between 'standard' and '4pi'
@@ -56,7 +66,7 @@ OTF_show = np.rot90( 10*np.log10 ( np.abs(OTF[plane,:,:]) + epsilon ) )
 # set font size
 plt.rcParams['font.size'] = 12
 
-#create figure and subfigures
+#create figure 1 and subfigures
 fig1, axs1 = plt.subplots( 2, 2, figsize= (8,8) )
 fig1.suptitle(Detection_Mode + ' ' + Microscope_Type + ' microscope')
 
@@ -93,6 +103,7 @@ axs1[1,1].imshow(OTF_show, extent=[-Kmax*n,Kmax*n,-Kmax*n,Kmax*n])
 
 #fig1.tight_layout() # prevents overlap of y-axis labels
 
+#create figure 2 and subfigures
 fig2, axs2 = plt.subplots( 1, 2, figsize=(8,8) )
 fig2.suptitle(Detection_Mode + ' ' + Microscope_Type + ' microscope')
 
@@ -113,6 +124,7 @@ else:
     axs2[1].set_title('|Pupil|')  
     
 # fig2.tight_layout() # prevents overlap of y-axis labels
-fig2.colorbar(ims, ax=axs2[1])
+colorbar(ims)
 # finally, render the figures
 plt.show()
+
