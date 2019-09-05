@@ -25,11 +25,12 @@ Kmax = 4.0    # maximum value of K in the K space
 N = 300     # sampling number
 K = 1.0     # radius of the Ewald sphere K=n/lambda
 
-NA = 0.7    # numerical aperture
-n = 1.0     # refractive index
+NA = 0.7   # numerical aperture
+n = 1.0    # refractive index
 
 Detection_Mode = 'standard'
 #choose between 'standard' and '4pi'
+
 Microscope_Type = 'widefield'
 # choose between: 'widefield', 'gaussian', 'bessel', 'SIM', 'STED', 'aberrated' 
 
