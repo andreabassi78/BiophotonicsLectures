@@ -27,15 +27,15 @@ class amplitude_transfer_function(object):
         '''
         self.N = N
         self.n = n
-        self.K_xyz_amplitude = K_xyz_extent # extent of the axis Kx,Ky,Kz
+        self.K_xyz_amplitude = K_xyz_extent # half length of the axes Kx,Ky,Kz
         self.values = np.zeros((N,N,N))     
-        K_xyz_min = -K_xyz_extent 
-        K_xyz_max = +K_xyz_extent 
+        K_xyz_min = - K_xyz_extent 
+        K_xyz_max = + K_xyz_extent 
         self.dK = dK = (K_xyz_max-K_xyz_min)/N #sampling, in K space
         kx = ky = kz = np.arange(K_xyz_min, K_xyz_max, dK)
         self.KX, self.KY, self.KZ = np.meshgrid(kx,ky,kz)     
-        self.dr = 1/(2*K_xyz_extent)    # spatial sampling, in real space
-        self.xyz_extent = 1/(2*dK)      # extent of the axis x,y,z
+        self.dr = 1/(2*K_xyz_extent)    # spatial sampling, in real space.
+        self.xyz_extent = 1/(2*dK)      # half length of the axes x,y,z. It is also N*dr/2
         self.microscope_type = None
            
     def create_ewald_sphere(self, Kradius = 1.0):

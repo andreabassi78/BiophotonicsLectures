@@ -11,22 +11,12 @@ import time
 from EwaldSphere.AmplitudeTransferFunction import amplitude_transfer_function
 from xlrd.formula import num2strg
 
-def colorbar(mappable):
-    '''Auxiliary function to plot the colorbar in scale'''
-    from mpl_toolkits.axes_grid1 import make_axes_locatable
-    ax = mappable.axes
-    fig = ax.figure
-    divider = make_axes_locatable(ax)
-    cax = divider.append_axes("right", size="5%", pad=0.05)
-    return fig.colorbar(mappable, cax=cax)
 
-
-Kmax = 4.0    # maximum value of K in the K space
-N = 300     # sampling number
-K = 1.0     # radius of the Ewald sphere K=n/lambda
-
-NA = 0.9   # numerical aperture
-n = 1.0    # refractive index
+Kmax = 3.0     # maximum value of K in the K space
+N = 300      # sampling number
+K = 1      # radius of the Ewald sphere K=n/lambda
+NA = 0.8    # numerical aperture
+n = 1        # refractive index
 
 Detection_Mode = 'standard'
 #choose between 'standard' and '4pi'
@@ -34,10 +24,21 @@ Detection_Mode = 'standard'
 Microscope_Type = 'widefield'
 # choose between: 'widefield', 'gaussian', 'bessel', 'SIM', 'STED', 'aberrated' 
 
+
+SaveData = False
+#############################################################################
+#############################################################################
+
+
 # Generate the Amplitude Transfer Function (or Coherent Transfer Function)
 t0=time.time() # this is to calculate the execution time
 
 H = amplitude_transfer_function(N, Kmax, n)
+pixel_size = H.dr
+extent = H.xyz_extent
+print ('Real space sampling = ' + num2strg(pixel_size/n) + ' wavelengths')
+
+
 H.create_ewald_sphere(K)
 H.set_numerical_aperture(NA, Detection_Mode)
 pupil, psf_xy0 = H.set_microscope_type(NA, Microscope_Type)
@@ -63,6 +64,15 @@ OTF_show = np.rot90( 10*np.log10 ( np.abs(OTF[plane,:,:]) + epsilon ) )
 
 ############################################################################################
 #####    Create figures
+
+def colorbar(mappable):
+    '''Auxiliary function to plot the colorbar in scale'''
+    from mpl_toolkits.axes_grid1 import make_axes_locatable
+    ax = mappable.axes
+    fig = ax.figure
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="5%", pad=0.05)
+    return fig.colorbar(mappable, cax=cax)
 
 # set font size
 plt.rcParams['font.size'] = 12
@@ -111,21 +121,30 @@ fig2.suptitle(Detection_Mode + ' ' + Microscope_Type + ' microscope')
 axs2[0].set_title('|ASF(x,y,0)|')  
 axs2[0].set(xlabel = '$x/\lambda$')
 axs2[0].set(ylabel = '$y/\lambda$')
-axs2[0].imshow(np.abs(np.rot90(np.abs(psf_xy0)) ), extent=[-Rmax/n,Rmax/n,-Rmax/n,Rmax/n])
+axs2[0].imshow(np.abs((np.abs(psf_xy0)) ), extent=[-Rmax/n,Rmax/n,-Rmax/n,Rmax/n])
 
 axs2[1].set(xlabel = '$k_x\lambda$')
 axs2[1].set(ylabel = '$k_y\lambda$')
 if Microscope_Type in ('STED' , 'aberrated'): 
-    ims=axs2[1].imshow(np.rot90(np.angle(pupil)),
+    ims=axs2[1].imshow((np.angle(pupil)),
                        extent=[-Kmax*n,Kmax*n,-Kmax*n,Kmax*n]) #plot the amplitude of the pupil
     axs2[1].set_title('\u2220 Pupil')  
 else:
-    ims=axs2[1].imshow(np.rot90(np.abs(pupil)),
+    ims=axs2[1].imshow((np.abs(pupil)),
                        extent=[-Kmax*n,Kmax*n,-Kmax*n,Kmax*n]) #plot the phase of the pupil
     axs2[1].set_title('|Pupil|')  
     
 # fig2.tight_layout() # prevents overlap of y-axis labels
 colorbar(ims)
+
+##### Save Psf to .tif file
+if SaveData:
+    from skimage.external import tifffile as tif
+    psf16 = PSF * (2**16-1) / np.amax(PSF)
+    psf16 = psf16.astype('uint16')
+    tif.imsave('psf1_33.tif',psf16,bigtiff=True)
+
 # finally, render the figures
 plt.show()
+
 
