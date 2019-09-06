@@ -13,10 +13,11 @@ from skimage.io import imread
 from skimage.transform import radon, iradon, rescale
 from xlrd.formula import num2strg
 
-SAMPLING_ANGLE = 2 #deg
+SAMPLING_ANGLE = 1.0  #deg
+MAX_ANGLE = 180.0
 
-image = imread('Shepplogan.png',True)
-#image = rescale(image, scale=0.4, mode='reflect', multichannel=False)
+image = imread('Phantom.png',True) # choose between 'Phantom.png' and 'Brain.png'
+image = rescale(image, scale=1, mode='reflect', multichannel=False)
 
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 4.5))
@@ -24,7 +25,7 @@ fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 4.5))
 ax1.set_title("Original")
 ax1.imshow(image, cmap='gray')
 
-theta = np.linspace(0., 180., 180./SAMPLING_ANGLE, endpoint=False)
+theta = np.linspace(0.0, MAX_ANGLE, int(MAX_ANGLE/SAMPLING_ANGLE), endpoint=False)
 sinogram = radon(image, theta=theta, circle=True)
 ax2.set_title("Radon transform\n(Sinogram)")
 ax2.set_xlabel("Projection angle (deg)")
@@ -50,7 +51,9 @@ fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 4.5),
                                sharex=True, sharey=True)
 ax1.set_title("Original")
 ax1.imshow(image, cmap='gray')
-ax2.set_title("Reconstruction with Filtered Back Projection. \n Sampling angle = " + num2strg(SAMPLING_ANGLE) + "\xb0")
+ax2.set_title("Reconstruction with Filtered Back Projection. \n Sampling angle = "
+              + num2strg(SAMPLING_ANGLE) + "\xb0 \n Maximum angle =" 
+              + num2strg(MAX_ANGLE) + "\xb0")
 ax2.imshow(reconstruction_fbp , cmap='gray')
 plt.show()
 

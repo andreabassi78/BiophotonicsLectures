@@ -11,19 +11,19 @@ import time
 from EwaldSphere.AmplitudeTransferFunction import amplitude_transfer_function
 from xlrd.formula import num2strg
 
-Kmax = 3.0     # maximum value of K in the K space
+Kmax = 3.0   # maximum value of K in the K space
 N = 300      # sampling number
-K = 1      # radius of the Ewald sphere K=n/lambda
-NA = 0.7    # numerical aperture
+K = 1        # radius of the Ewald sphere K=n/lambda
+NA = 0.7     # numerical aperture
 n = 1        # refractive index
 
 Detection_Mode = 'standard'
 #choose between 'standard' and '4pi'
 
-Microscope_Type = 'bessel'
+Microscope_Type = 'widefield'
 # choose between: 'widefield', 'gaussian', 'bessel', 'SIM', 'STED', 'aberrated' 
 
-SaveData = True
+SaveData = False
 
 ############################
 ############################
@@ -65,7 +65,7 @@ if SaveData:
     from skimage.external import tifffile as tif
     psf16 = PSF * (2**16-1) / np.amax(PSF) #normalize
     psf16 = psf16.astype('uint16') #convert to 16 bit
-    tif.imsave('psf.tif', psf16, bigtiff=True)
+    tif.imsave('psf.tif', psf16, bigtiff=True, metadata={'axes': 'XYZCT'} )
     
 ############################
 #####    Create figures
