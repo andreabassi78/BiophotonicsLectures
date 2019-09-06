@@ -93,7 +93,7 @@ class amplitude_transfer_function(object):
         elif mtype == 'STED':    
             pupil.functiontype('angular_phase', Kxy_max)
         elif mtype == 'aberrated':
-            pupil.functiontype('quartic_phase', Kxy_max, 1) 
+            pupil.functiontype('quartic_phase', Kxy_max*2, 16) 
             #simulates a spherical aberration with phase = kxy^4 
         else:
             raise TypeError("Microscope type '" + mtype + "' not supported")   

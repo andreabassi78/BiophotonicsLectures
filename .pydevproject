@@ -2,7 +2,7 @@
 <?eclipse-pydev version="1.0"?><pydev_project>
             
     
-    <pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">python</pydev_property>
+    <pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">/Users/Andrea/anaconda3/bin/python3.6</pydev_property>
             
     
     <pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">python interpreter</pydev_property>

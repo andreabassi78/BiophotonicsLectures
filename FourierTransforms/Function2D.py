@@ -9,15 +9,13 @@ from xlrd.formula import num2strg
 
 def roundandconvert(num):
     return num2strg(round(num,4))
-    
-
 
 class function2D(object):
     '''
     Creates a 2-dimensional function (self.data) on a meshgrid X,Y.
     The function can be of different types: circle, annulus, square, gaussian, sine, ramp, delta, 
-    angular_phase, parabolic_phase.
-    
+    angular_phase, quartic_phase.
+    self.title is a string containing the filter name and parameters    
     '''
 
     def __init__(self, X,Y):
@@ -31,18 +29,18 @@ class function2D(object):
         self.setcenter(0,0)
         
     def setcenter(self,X0,Y0):
-        """
+        '''
         centers the function at X0,Y0 (floats)
-        """
+        '''
         self.X0 = X0    
         self.Y0 = Y0   
       
     def functiontype(self, ftype, arg1, *argv):
-        """
+        '''
         ftype (string) is the function type
         arg1 (float) is radius for ftype='circle' , halfsize of the side for 'square', waist for 'gaussian'           
         *argv is an optional value (float), for the functions requiring more than 1 argument
-        """    
+        '''    
         if ftype == 'circle':   
             radius=arg1
             indexes= (np.sqrt((self.X-self.X0)**2+(self.Y-self.Y0)**2))<radius
@@ -97,7 +95,7 @@ class function2D(object):
             self.title = ftype + ': N = ' + roundandconvert(len(argv)) 
         
         elif ftype == 'angular_phase':
-            "simulates a phase plate of radius arg1 with phase increasing angularly to 2pi"
+            '''simulates a phase increasing angularly to 2pi'''
             radius=arg1
             phase = ( np.arctan2 ((self.Y-self.Y0),(self.X-self.X0)) ) #phase
             phase = phase / (np.amax((phase))-np.amin((phase))) 
@@ -105,19 +103,15 @@ class function2D(object):
             self.title = ftype + ': radius = ' + roundandconvert(radius) 
             
         elif ftype == 'quartic_phase':
-            "simulates a phase plate of ragius arg1 with phase increasing with the 4th power of the distance from center"
+            '''simulates a phase increasing with the 4th power of the distance from center'''
             radius = arg1
-            c = argv
-            phase = c * (np.sqrt((self.X-self.X0)**2+(self.Y-self.Y0)**2)/radius)**4
+            c = 1
+            if len(argv) > 0:
+                c = argv[0]
+            phase =  c * (np.sqrt((self.X-self.X0)**2+(self.Y-self.Y0)**2)/radius)**4
             #phase = phase / (np.amax((phase))-np.amin((phase))) 
-            self.data = np.exp(-2*np.pi*1j*phase)
+            self.data = np.exp(2*np.pi*1j*phase)  
             self.title = ftype + ': radius = ' + roundandconvert(radius)     
-            
-#         elif ftype == 'image':    
-#             filename = 'guernica.jpg'
-#             im = mpimg.imread(filename)
-#             self.data = im - np.mean(im) 
-#             self.title = ftype + ': ' + filename 
 
         else:
             raise TypeError("Function '" + ftype + "' not supported")        

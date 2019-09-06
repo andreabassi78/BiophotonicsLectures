@@ -11,24 +11,22 @@ import time
 from EwaldSphere.AmplitudeTransferFunction import amplitude_transfer_function
 from xlrd.formula import num2strg
 
-
 Kmax = 3.0     # maximum value of K in the K space
 N = 300      # sampling number
 K = 1      # radius of the Ewald sphere K=n/lambda
-NA = 0.8    # numerical aperture
+NA = 0.7    # numerical aperture
 n = 1        # refractive index
 
 Detection_Mode = 'standard'
 #choose between 'standard' and '4pi'
 
-Microscope_Type = 'widefield'
+Microscope_Type = 'bessel'
 # choose between: 'widefield', 'gaussian', 'bessel', 'SIM', 'STED', 'aberrated' 
 
+SaveData = True
 
-SaveData = False
-#############################################################################
-#############################################################################
-
+############################
+############################
 
 # Generate the Amplitude Transfer Function (or Coherent Transfer Function)
 t0=time.time() # this is to calculate the execution time
@@ -36,24 +34,22 @@ t0=time.time() # this is to calculate the execution time
 H = amplitude_transfer_function(N, Kmax, n)
 pixel_size = H.dr
 extent = H.xyz_extent
-print ('Real space sampling = ' + num2strg(pixel_size/n) + ' wavelengths')
-
+print ('Real space sampling = ' + num2strg(pixel_size/n) + ' * wavelength')
 
 H.create_ewald_sphere(K)
 H.set_numerical_aperture(NA, Detection_Mode)
 pupil, psf_xy0 = H.set_microscope_type(NA, Microscope_Type)
 
-
 ATF = H.values # Amplitude Transfer Function
 
 ASF = ifftshift(ifftn(fftshift(ATF))) * N**3 #
-# Amplitude Spread Function (normalized for the volume of the space)
+# Amplitude Spread Function (normalized for the total volume)
 
 PSF = np.abs(ASF)**2 # Point Spread Function
 
 OTF = fftshift(fftn(ifftshift(PSF))) # Optical Transfer Function
 
-print('Elapsed time for calculation: ' + num2strg( time.time()-t0) )
+print('Elapsed time for calculation: ' + num2strg( time.time()-t0) + 's' )
 
 plane=round(N/2)
 epsilon = 1e-9 # to avoid calculating log 0 later
@@ -62,7 +58,16 @@ ASF_show = np.rot90( ( np.abs(ASF[plane,:,:]) ) )
 PSF_show = np.rot90( ( np.abs(PSF[plane,:,:]) ) )
 OTF_show = np.rot90( 10*np.log10 ( np.abs(OTF[plane,:,:]) + epsilon ) ) 
 
-############################################################################################
+############################
+##### Save Psf to .tif file
+
+if SaveData:
+    from skimage.external import tifffile as tif
+    psf16 = PSF * (2**16-1) / np.amax(PSF) #normalize
+    psf16 = psf16.astype('uint16') #convert to 16 bit
+    tif.imsave('psf.tif', psf16, bigtiff=True)
+    
+############################
 #####    Create figures
 
 def colorbar(mappable):
@@ -136,13 +141,6 @@ else:
     
 # fig2.tight_layout() # prevents overlap of y-axis labels
 colorbar(ims)
-
-##### Save Psf to .tif file
-if SaveData:
-    from skimage.external import tifffile as tif
-    psf16 = PSF * (2**16-1) / np.amax(PSF)
-    psf16 = psf16.astype('uint16')
-    tif.imsave('psf1_33.tif',psf16,bigtiff=True)
 
 # finally, render the figures
 plt.show()

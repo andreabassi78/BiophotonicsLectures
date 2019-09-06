@@ -19,13 +19,16 @@ Z=testimage.im
 KX, KY = testimage.createKspace()
 
 #####################################################################################
-# calculate 2D fft (translated to the center using fftshift. ifftshift is used to remore phase error)
+# calculate 2D fft (translated to the center using fftshift. ifftshift is used to remove phase error)
 ft=fftshift(fft2(ifftshift(Z)))
 
 filter_function = function2D(KX, KY)
 kmax=np.amax(KX)
-filter_function.functiontype('square', kmax/4) 
-# choose between 'circle', 'annulus', 'square', 'gaussian', 'ramp'
+filter_function.functiontype('ramp', kmax/4) 
+"""
+choose between 'circle', 'annulus', 'square', 'gaussian', 'ramp', 'delta'
+"""
+
 filt = filter_function.data 
 
 #filter ImageType in Fourier space
