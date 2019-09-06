@@ -89,7 +89,6 @@ class function2D(object):
             width = arg1   # width of the delta
             for arg in argv:
                 X1, Y1 = arg
-                print()
                 indexes= ( np.abs(self.X-self.X0-X1) < width) * ( np.abs(self.Y-self.Y0-Y1)  < width )
                 self.data[indexes] = 1 
             self.title = ftype + ': N = ' + roundandconvert(len(argv)) 

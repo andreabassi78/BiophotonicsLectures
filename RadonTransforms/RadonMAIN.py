@@ -42,7 +42,7 @@ Reconstruction with Filtered Back Projection
 
 t0=time.time()
 reconstruction_fbp = iradon(sinogram, theta, circle=True)
-print("Time for execution of FBP: " + num2strg(round(time.time()-t0,6)) +" s")
+print("Time for execution of FBP: " + num2strg(round(time.time()-t0,6)) + " s")
 error = reconstruction_fbp-image
 print(f"FBP rms reconstruction error: {np.sqrt(np.mean(error**2)):.3g}")
 

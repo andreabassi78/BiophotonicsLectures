@@ -4,6 +4,7 @@ Created on 28 jul 2019
 Lecture on 3D Optical Transfer Functions and Ewald Sphere. 
 Optical Microscopy Course (Biophotonics)
 '''
+
 import numpy as np 
 from numpy.fft import fftn, ifftn, fftshift, ifftshift
 import matplotlib.pyplot as plt
@@ -11,11 +12,11 @@ import time
 from EwaldSphere.AmplitudeTransferFunction import amplitude_transfer_function
 from xlrd.formula import num2strg
 
-Kmax = 3.0   # maximum value of K in the K space
-N = 300      # sampling number
-K = 1        # radius of the Ewald sphere K=n/lambda
-NA = 0.7     # numerical aperture
-n = 1        # refractive index
+Kextent = 3.0  # maximum value of Kx,Ky,Ky in the K space. k space goes from -Kextent to +Kextent
+N = 256        # sampling number
+K = 1.0        # radius of the Ewald sphere K=n/lambda
+NA = 0.7       # numerical aperture
+n = 1.0        # refractive index
 
 Detection_Mode = 'standard'
 #choose between 'standard' and '4pi'
@@ -31,9 +32,10 @@ SaveData = False
 # Generate the Amplitude Transfer Function (or Coherent Transfer Function)
 t0=time.time() # this is to calculate the execution time
 
-H = amplitude_transfer_function(N, Kmax, n)
+H = amplitude_transfer_function(N, Kextent, n)
 pixel_size = H.dr
 extent = H.xyz_extent
+
 print ('Real space sampling = ' + num2strg(pixel_size/n) + ' * wavelength')
 
 H.create_ewald_sphere(K)
@@ -58,15 +60,6 @@ ASF_show = np.rot90( ( np.abs(ASF[plane,:,:]) ) )
 PSF_show = np.rot90( ( np.abs(PSF[plane,:,:]) ) )
 OTF_show = np.rot90( 10*np.log10 ( np.abs(OTF[plane,:,:]) + epsilon ) ) 
 
-############################
-##### Save Psf to .tif file
-
-if SaveData:
-    from skimage.external import tifffile as tif
-    psf16 = PSF * (2**16-1) / np.amax(PSF) #normalize
-    psf16 = psf16.astype('uint16') #convert to 16 bit
-    tif.imsave('psf.tif', psf16, bigtiff=True, metadata={'axes': 'XYZCT'} )
-    
 ############################
 #####    Create figures
 
@@ -102,7 +95,7 @@ axs1[0,0].imshow(ASF_show, vmin = ASF_show.min(), vmax = ASF_show.max(),
 axs1[0,1].set_title("|ATF($k_x$,0,$k_z$)|") 
 #axs[0,1].set(xlabel = '$k_x\lambda$')
 axs1[0,1].set(ylabel = '$k_z\lambda$')
-axs1[0,1].imshow(ATF_show ,  extent=[-Kmax*n,Kmax*n,-Kmax*n,Kmax*n])
+axs1[0,1].imshow(ATF_show ,  extent=[-Kextent*n,Kextent*n,-Kextent*n,Kextent*n])
 
 # create subplot:
 axs1[1,0].set_title('|PSF(x,0,z)|')  
@@ -115,7 +108,7 @@ axs1[1,0].imshow(PSF_show, vmin = PSF_show.min(), vmax = PSF_show.max(),
 axs1[1,1].set_title('log|OTF($k_x$,0,$k_z$)|')  
 axs1[1,1].set(xlabel = '$k_x\lambda$')
 axs1[1,1].set(ylabel = '$k_z\lambda$')
-axs1[1,1].imshow(OTF_show, extent=[-Kmax*n,Kmax*n,-Kmax*n,Kmax*n])
+axs1[1,1].imshow(OTF_show, extent=[-Kextent*n,Kextent*n,-Kextent*n,Kextent*n])
 
 #fig1.tight_layout() # prevents overlap of y-axis labels
 
@@ -132,17 +125,30 @@ axs2[1].set(xlabel = '$k_x\lambda$')
 axs2[1].set(ylabel = '$k_y\lambda$')
 if Microscope_Type in ('STED' , 'aberrated'): 
     ims=axs2[1].imshow((np.angle(pupil)),
-                       extent=[-Kmax*n,Kmax*n,-Kmax*n,Kmax*n]) #plot the amplitude of the pupil
-    axs2[1].set_title('\u2220 Pupil')  
+                       extent=[-Kextent*n,Kextent*n,-Kextent*n,Kextent*n]) #plot the amplitude of the pupil
+    axs2[1].set_title('\u2220 Pupil') #angle symbol \u2220 
 else:
     ims=axs2[1].imshow((np.abs(pupil)),
-                       extent=[-Kmax*n,Kmax*n,-Kmax*n,Kmax*n]) #plot the phase of the pupil
+                       extent=[-Kextent*n,Kextent*n,-Kextent*n,Kextent*n]) #plot the phase of the pupil
     axs2[1].set_title('|Pupil|')  
     
 # fig2.tight_layout() # prevents overlap of y-axis labels
 colorbar(ims)
 
 # finally, render the figures
-plt.show()
+#plt.show()
 
+############################
+##### Save Psf to .tif file
 
+if SaveData:
+    
+    wavelenght = 0.520 #um  #you may want to specify a wavelength to save a calibrated PSF
+    
+    from skimage.external import tifffile as tif
+    psf16 = np.transpose(np.abs(PSF),(2,0,1))
+    psf16 = ( psf16 * (2**16-1) / np.amax(psf16) ).astype('uint16') #normalize and convert to 16 bit
+    psf16.shape = 1, N, 1, N, N, 1 # dimensions in TZCYXS order
+    sampling = pixel_size/n*wavelenght
+    tif.imsave('psf.tif', psf16, imagej=True, resolution = (1.0/sampling, 1.0/sampling),
+                metadata={'spacing': sampling, 'unit': 'um'})

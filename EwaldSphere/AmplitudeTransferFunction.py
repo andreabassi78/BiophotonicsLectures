@@ -28,7 +28,7 @@ class amplitude_transfer_function(object):
         self.N = N
         self.n = n
         self.K_xyz_amplitude = K_xyz_extent # half length of the axes Kx,Ky,Kz
-        self.values = np.zeros((N,N,N))     
+        self.values = np.zeros((N,N,N), dtype = np.complex)     
         K_xyz_min = - K_xyz_extent 
         K_xyz_max = + K_xyz_extent 
         self.dK = dK = (K_xyz_max-K_xyz_min)/N #sampling, in K space
@@ -101,14 +101,8 @@ class amplitude_transfer_function(object):
         indexes= (np.sqrt((kx)**2+(ky)**2))>Kxy_max
         pupil.data[indexes] = 0 # limits the pupil to the NA
         asf = ifftshift(ifft2(fftshift(pupil.data))) 
-        #psf = (np.abs(asf))**2 
-        projection = create_projection(pupil.data, self.N)
-        self.values =  projection * self.values
-         
-        return pupil.data, asf  
- 
-def create_projection(data,N):
-    projection = np.zeros((N,N,N),np.complex) 
-    for ii in range (0, N):
-        projection[:,:,ii] = data
-    return(projection)             
+        projection = pupil.data[:]
+        projection.shape = self.N,self.N,1 # reshapes the pupil to be projected on self.values along kz
+        self.values *=  projection
+        
+        return pupil.data, asf
