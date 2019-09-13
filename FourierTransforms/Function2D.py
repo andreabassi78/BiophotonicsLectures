@@ -83,7 +83,7 @@ class function2D(object):
         
         elif ftype == 'delta':
             '''function made of delta in the N points specified in *argv. 
-               Example: XXX.functiontype('delta',0.1, [1,0], [5,2]
+               Example: XXX.functiontype('delta',0.1, [1,0], [5,2])
                will create two delta, of width 0.1, in the two locations [1,0] and [5,2]  
             '''    
             width = arg1   # width of the delta
