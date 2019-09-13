@@ -14,7 +14,7 @@ from FourierTransforms.Function2D import function2D
 
 xymin = -5.0 #
 xymax = +5.0 #
-Nsamples=200
+Nsamples = 200
 
 deltaxy = (xymax-xymin)/Nsamples
 x = y = np.arange(xymin, xymax, deltaxy)
@@ -38,7 +38,7 @@ f.functiontype(ftype, 1.0 )
 Z = f.data #Z are the values of the function
 
 #####################################################################################
-# calculate 2D fft (translated to the center using fftshift. ifftshift is used to remore phase error)
+# calculate 2D fft (translated to the center using fftshift. ifftshift is used to remove phase errors)
 ft=fftshift(fft2(ifftshift(Z)))
 
 
