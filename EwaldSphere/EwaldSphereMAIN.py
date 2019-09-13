@@ -136,7 +136,7 @@ else:
 colorbar(ims)
 
 # finally, render the figures
-#plt.show()
+plt.show()
 
 ############################
 ##### Save Psf to .tif file
