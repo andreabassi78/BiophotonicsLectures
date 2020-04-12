@@ -10,8 +10,8 @@ Optical Microscopy Course (Biophotonics)
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy.fft import fftshift, ifftshift, fft2, ifft2
-from FourierTransforms.ImageType import image
-from FourierTransforms.Function2D import function2D
+from ImageType import image
+from Function2D import function2D
 
 #####################create ImageType with squares
 testimage=image('file')   #choose between 'file' and 'rect'  

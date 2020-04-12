@@ -54,11 +54,11 @@ class function2D(object):
                 int_radius = argv[0] 
             indexes = ((np.sqrt((self.X-self.X0)**2+(self.Y-self.Y0)**2))<ext_radius) * ((np.sqrt((self.X-self.X0)**2+(self.Y-self.Y0)**2))>int_radius)
             self.data[indexes] = 1
-            self.title = ftype + ': external radius = ' + roundandconvert(ext_radius) + 'internal radius = ' + roundandconvert(int_radius)                
+            self.title = ftype + ': external radius = ' + roundandconvert(ext_radius) + ' internal radius = ' + roundandconvert(int_radius)
                 
         elif ftype == 'square':
-            halfside=arg1    
-            indexes= (np.abs(self.X-self.X0)<halfside) * (np.abs(self.Y-self.Y0)<halfside)
+            halfside = arg1
+            indexes = (np.abs(self.X-self.X0)<halfside) * (np.abs(self.Y-self.Y0)<halfside)
             self.data[indexes] = 1 
             self.title = ftype + ': half-side = ' + roundandconvert(halfside)           
             

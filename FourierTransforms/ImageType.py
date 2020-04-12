@@ -46,16 +46,16 @@ class image(object):
         KX, KY = np.meshgrid(kx, ky)
         return KX, KY
 
-    def create_random_squares_image(self, halfside = 0.05, N = 30):
+    def create_random_squares_image(self, halfside = 0.1, N = 20):
         
         X,Y = self.createXY()
-        assert X == Y
+        #assert X == Y
         im = np.zeros(X.shape)
-        xr = np.random.uniform(self.xm, self.ym, N)
-        yr = np.random.uniform(self.xm, self.ym, N)
+        xr = np.random.uniform(-self.xymax, self.xymax, N)
+        yr = np.random.uniform(-self.xymax, self.xymax, N)
         indexes=im.all()
         for ii in range(0,xr.shape[0]):
-            indexes = indexes+((np.abs(self.X - xr[ii]) < halfside) * (np.abs(self.Y - yr[ii]) < halfside))
+            indexes = indexes+((np.abs(X - xr[ii]) < halfside) * (np.abs(Y - yr[ii]) < halfside))
         im[indexes] = 1
         return im
     
@@ -68,6 +68,3 @@ class image(object):
         self.Nsamples = Nsamples = sx
         self.deltaxy = (xymax-xymin)/Nsamples    
         return im
-         
-
-            

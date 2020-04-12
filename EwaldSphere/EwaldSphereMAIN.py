@@ -13,9 +13,10 @@ from EwaldSphere.AmplitudeTransferFunction import amplitude_transfer_function
 from xlrd.formula import num2strg
 
 Kextent = 3.0  # maximum value of Kx,Ky,Ky in the K space. k space goes from -Kextent to +Kextent
-N = 256        # sampling number
-K = 1.0        # radius of the Ewald sphere K=n/lambda
-NA = 0.7       # numerical aperture
+N = 300        # sampling number
+K = 1        # radius of the Ewald sphere K=n/lambda
+NA = 0.7
+       # numerical aperture
 n = 1.0        # refractive index
 
 Detection_Mode = 'standard'
@@ -42,14 +43,14 @@ H.create_ewald_sphere(K)
 H.set_numerical_aperture(NA, Detection_Mode)
 pupil, psf_xy0 = H.set_microscope_type(NA, Microscope_Type)
 
-ATF = H.values # Amplitude Transfer Function
+ATF = H.values # 3D Amplitude Transfer Function
 
 ASF = ifftshift(ifftn(fftshift(ATF))) * N**3 #
-# Amplitude Spread Function (normalized for the total volume)
+# 3D Amplitude Spread Function (normalized for the total volume)
 
-PSF = np.abs(ASF)**2 # Point Spread Function
+PSF = np.abs(ASF)**2 # 3D Point Spread Function
 
-OTF = fftshift(fftn(ifftshift(PSF))) # Optical Transfer Function
+OTF = fftshift(fftn(ifftshift(PSF))) # 3D Optical Transfer Function
 
 print('Elapsed time for calculation: ' + num2strg( time.time()-t0) + 's' )
 
@@ -143,12 +144,12 @@ plt.show()
 
 if SaveData:
     
-    wavelenght = 0.520 #um  #you may want to specify a wavelength to save a calibrated PSF
+    wavelength = 0.520 #um  #you may want to specify a wavelength to save a calibrated PSF
     
     from skimage.external import tifffile as tif
     psf16 = np.transpose(np.abs(PSF),(2,0,1))
     psf16 = ( psf16 * (2**16-1) / np.amax(psf16) ).astype('uint16') #normalize and convert to 16 bit
     psf16.shape = 1, N, 1, N, N, 1 # dimensions in TZCYXS order
-    sampling = pixel_size/n*wavelenght
+    sampling = pixel_size/n*wavelength
     tif.imsave('psf.tif', psf16, imagej=True, resolution = (1.0/sampling, 1.0/sampling),
                 metadata={'spacing': sampling, 'unit': 'um'})
