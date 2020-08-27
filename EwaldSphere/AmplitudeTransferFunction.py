@@ -5,7 +5,7 @@ Created on 28 jul 2019
 
 import numpy as np
 from numpy.fft import ifft2, fftshift, ifftshift
-from FourierTransforms.Function2D import function2D
+from Function2D import function2D
   
 class amplitude_transfer_function(object):
     '''

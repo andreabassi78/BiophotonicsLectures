@@ -99,8 +99,4 @@ slider.on_change('value', update)
 grid = gridplot([s0, s1, s2, s3, s4, s5], ncols=3, plot_width=300, plot_height=300, toolbar_location=None)
 lay = layout([[select, slider], grid])
 
-#output_file("Filter.html", title="Spatial filter")
-
-# show(lay)
-
 curdoc().add_root(lay)

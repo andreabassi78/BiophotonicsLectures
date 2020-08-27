@@ -10,7 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from numpy.fft import fftshift, ifftshift, fft2
-from FourierTransforms.Function2D import function2D
+from Function2D import function2D
 
 xymin = -5.0 #
 xymax = +5.0 #

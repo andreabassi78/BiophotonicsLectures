@@ -9,11 +9,11 @@ from numpy.fft import fftshift, ifftshift, fft2, ifft2
 from ImageType import image
 from Function2D import function2D
 from bokeh.io import show
-from bokeh.layouts import gridplot, layout
+from bokeh.layouts import gridplot
 from bokeh.plotting import output_file, figure
 from bokeh.models import Range1d
-from bokeh.models import Select, Slider, RadioGroup, CustomJS
-from bokeh.models import BoxSelectTool, WheelZoomTool, LassoSelectTool
+#from bokeh.models import Select, Slider, RadioGroup, CustomJS
+#from bokeh.models import BoxSelectTool, WheelZoomTool, LassoSelectTool
 
 #####################create ImageType with squares
 testimage=image('file')   #choose between 'file' and 'rect'

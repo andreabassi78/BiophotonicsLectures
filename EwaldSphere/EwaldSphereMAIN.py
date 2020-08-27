@@ -9,15 +9,15 @@ import numpy as np
 from numpy.fft import fftn, ifftn, fftshift, ifftshift
 import matplotlib.pyplot as plt
 import time
-from EwaldSphere.AmplitudeTransferFunction import amplitude_transfer_function
+from AmplitudeTransferFunction import amplitude_transfer_function
 from xlrd.formula import num2strg
 
-Kextent = 3.0  # maximum value of Kx,Ky,Ky in the K space. k space goes from -Kextent to +Kextent
-N = 300        # sampling number
+Kextent = 2  # maximum value of Kx,Ky,Kz in the K space. k space goes from -Kextent to +Kextent
+N = 256        # sampling number
 K = 1        # radius of the Ewald sphere K=n/lambda
-NA = 0.7
+NA = 0.3
        # numerical aperture
-n = 1.0        # refractive index
+n = 1.        # refractive index
 
 Detection_Mode = 'standard'
 #choose between 'standard' and '4pi'
