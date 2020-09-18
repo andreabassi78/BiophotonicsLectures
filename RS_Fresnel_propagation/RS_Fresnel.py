@@ -88,7 +88,7 @@ if __name__ == '__main__':
     wavelength = 0.532 * um 
     n = 1
     
-    z = 200 * um
+    z = 10 * um
     
     Nsamples = 1024 # number of pixels
     L = 100 * um # extent of the xy space
