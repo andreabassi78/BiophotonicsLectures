@@ -27,6 +27,7 @@ a = 5*mm  # radius of the the pupil
 k = n/wavelength # wavenumber
 
 alpha = np.arctan(a/f) # collection angle of the lens
+
 NA = n*np.sin(alpha) # non paraxial NA
 #NA = n*a/f #in paraxial approximation
 
@@ -49,8 +50,8 @@ ky = YP / a * k_cut_off
 k_rho = np.sqrt(kx**2 + ky**2)
 k_theta = np.arctan2(ky,kx)
 
-N = 3 # Zernike radial order 
-M = 1 # Zernike azimutal frequency
+N = 2 # Zernike radial order 
+M = 2 # Zernike azimutal frequency
 
 phase = nm_polynomial(N, M, k_rho/k_cut_off, k_theta, normalized = False) 
 
@@ -58,6 +59,15 @@ weight = 3.14
 
 ATF = np.exp (1.j * weight * phase) # Amplitude Transfer Function
 
+z = 0*um # defocus distance
+
+angular_spectum_propagator = np.exp(-1.j*2*np.pi*np.sqrt(k**2-k_rho**2)*z)
+
+#evanescent_idx = (k_rho >= k)
+#evanescent_idx = np.isnan(angular_spectum_propagator)
+#angular_spectum_propagator[evanescent_idx] = 0 # exclude all kx,ky that would be evanescent
+
+ATF = ATF * angular_spectum_propagator
 
 mask_idx = (k_rho > k_cut_off)
 ATF[mask_idx] = 0 # Creates a circular mask
