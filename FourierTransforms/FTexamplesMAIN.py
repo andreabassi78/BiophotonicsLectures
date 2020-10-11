@@ -17,7 +17,7 @@ xymax = +5.0 #
 Nsamples = 200
 
 deltaxy = (xymax-xymin)/Nsamples
-x = y = np.arange(xymin, xymax, deltaxy)
+x = y = np.linspace(xymin, xymax, Nsamples)
 X, Y = np.meshgrid(x,y)
 
 kxymin = -1/(2*deltaxy)
@@ -32,15 +32,14 @@ X0 = 0 #translation in x
 Y0 = 0 #translation in y
 f.setcenter(X0, Y0)
 ftype = 'square' #change ftype to choose between 'circle', 'annulus','square','gaussian','sine',deltas
-f.functiontype(ftype, 1, 0.5)
+f.functiontype(ftype, 0.5)
 Z = f.data #Z are the values of the function
 
 
-#####################################################################################
 # calculate 2D fft (translated to the center using fftshift. ifftshift is used to remove phase errors)
 ft=fftshift(fft2(ifftshift(Z)))
 
-# create figures
+# %% create figures
 #plot 2D function
 fig1 = plt.figure(figsize=(9, 9))
 

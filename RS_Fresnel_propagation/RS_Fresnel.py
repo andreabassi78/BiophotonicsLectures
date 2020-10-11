@@ -1,7 +1,7 @@
 """
 Created on Wed May 20 23:21:44 2020
 
-Based on the Diffractio module (https://pypi.org/project/diffractio/)
+Based on the kernel functions found in Diffractio module (https://pypi.org/project/diffractio/)
 
 Notation from Mertz, "Introduction to Optical Microscopy"
 
@@ -82,45 +82,44 @@ def show_fields( fields, titles, kind = 'intensity', extent = (-50,50,-50,50) ):
                      title = titles[idx],
                      ) 
                           
-if __name__ == '__main__':
-    """ the code execution starts here"""       
-    um = 1.0
-    wavelength = 0.532 * um 
-    n = 1
-    
-    z = 10 * um
-    
-    Nsamples = 1024 # number of pixels
-    L = 100 * um # extent of the xy space
-    x = y = np.linspace(-L/2, +L/2, Nsamples)
-    X, Y = np.meshgrid(x,y)
-    
-    """ create a constant field E0 (plane wave propagating along z)"""
-    E0 = np.ones([Nsamples, Nsamples])
-    
-    # """ create a plane wave with certain kx and ky """  
-    # kx = 0.0
-    # ky = 0.0
-    # E0 = np.exp(-1.j*2*pi* (kx*X+ky*Y))
-    # E0 = np.cos(2*pi* (kx*X+ky*Y)) 
-    
-    """ insert a square mask """
-    side = 10 * um
-    indexes = (np.abs(X)>side/2) | (np.abs(Y)>side/2)
-    E0[indexes] = 0
-    
-    """calculate the free space propagator """
-    D = kernelRS(X, Y, z, wavelength, n)
-    D = kernelFresnel(X, Y, z, wavelength, n)
-    
-    """ calculate E1 as the convolution of E0 and D, using Fast Fourier Transform """
-    dx = x[1]-x[0]
-    dy = y[1]-y[0]
-    E1 = ifftshift( ifft2 (fft2(E0) * fft2(D) ) ) * dx *dy 
-    
-    """ show the fields as magnitude, intensity, phase or real part """
-    show_fields(fields = (E0,E1),
-                titles = ('E0', f'E1, z= {z}'),
-                kind = 'amp',
-                extent = (-L/2,L/2,-L/2,L/2)
-                )
+ 
+um = 1.0
+wavelength = 0.532 * um 
+n = 1
+
+
+Nsamples = 1024 # number of pixels
+L = 300 * um # extent of the xy space
+x = y = np.linspace(-L/2, +L/2, Nsamples)
+X, Y = np.meshgrid(x,y)
+
+""" create a constant field E0 (plane wave propagating along z)"""
+E0 = np.ones([Nsamples, Nsamples])
+
+# """ create a plane wave with certain kx and ky """  
+# kx = 0.0
+# ky = 0.0
+# E0 = np.exp(-1.j*2*pi* (kx*X+ky*Y))
+# #E0 = np.cos(2*pi* (kx*X+ky*Y)) 
+
+""" insert a square mask """
+side = 10 * um
+indexes = (np.abs(X)>side/2) | (np.abs(Y)>side/2)
+E0[indexes] = 0
+
+"""calculate the free space propagator """
+z = 200 * um
+D = kernelRS(X, Y, z, wavelength, n)
+#D = kernelFresnel(X, Y, z, wavelength, n)
+
+""" calculate E1 as the convolution of E0 and D, using Fast Fourier Transform """
+dx = x[1]-x[0]
+dy = y[1]-y[0]
+E1 = ifftshift( ifft2 (fft2(E0) * fft2(D) ) ) * dx *dy 
+
+""" show the fields as magnitude, intensity, phase or real part """
+show_fields(fields = (E0,E1),
+            titles = ('E0', f'E1, z= {z}'),
+            kind = 'abs',
+            extent = (-L/2,L/2,-L/2,L/2)
+            )
