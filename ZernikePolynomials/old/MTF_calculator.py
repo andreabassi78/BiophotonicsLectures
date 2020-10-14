@@ -26,9 +26,7 @@ a = 5*mm  # radius of the the pupil
 
 k = n/wavelength # wavenumber
 
-alpha = np.arctan(a/f) # collection angle of the lens
-NA = n*np.sin(alpha) # non paraxial NA
-#NA = n*a/f #in paraxial approximation
+NA = n*a/f # Numerial aperture (assuming Abbe sine condition)
 
 print('The numerical aperture of the system is:', NA) 
 print('The diffraction limited (Rayleigh) resolution is:', 1.22*wavelength/2/NA ,'um') 
@@ -40,62 +38,73 @@ b = 15 * mm # let's define a spatial extent of the pupil, larger than the pupil 
 xP = yP = np.linspace(-b, +b, Npixels)
 XP, YP = np.meshgrid(xP,yP)
 
-# kx = XP * k / f # in paraxial approximation 
-# ky = YP * k / f # in paraxial approximation 
-kx = XP / a * k_cut_off 
-ky = YP / a * k_cut_off
+kx = XP * k / f  
+ky = YP * k / f  
+# kx = XP / a * k_cut_off # other way to calculate kx and ky
+# ky = YP / a * k_cut_off
 
 # (kx,ky) in radial coordinates
 k_rho = np.sqrt(kx**2 + ky**2)
 k_theta = np.arctan2(ky,kx)
 
-N = 3 # Zernike radial order 
-M = 1 # Zernike azimutal frequency
+N = 0 # Zernike radial order 
+M = 0 # Zernike azimutal frequency
 
 phase = nm_polynomial(N, M, k_rho/k_cut_off, k_theta, normalized = False) 
 
-weight = 3.14
+weight = 3.14159
 
 ATF = np.exp (1.j * weight * phase) # Amplitude Transfer Function
 
+z = 5*um # defocus distance
 
 mask_idx = (k_rho > k_cut_off)
 ATF[mask_idx] = 0 # Creates a circular mask
 
-ASF = ifftshift(ifft2(ATF)) #* k**2/f**2 # Amplitude Spread Function
+ASF = ifftshift(ifft2(fftshift(ATF))) # Amplitude Spread Function
 
 PSF = np.abs(ASF)**2 # Point Spread Function
+PSF = PSF/np.sum(PSF) # PSF normalized with its area
+
+OTF = fftshift(fft2(ifftshift(PSF)))
+
+MTF = np.real(OTF)
 
 # %%% plot the ATF and the PSF 
-
-fig, ax = plt.subplots(1, 2, figsize=(9, 4), tight_layout=False)
+fig = plt.figure(figsize=(9, 9))
 fig.suptitle(f'Wavefront aberrated with Zernike coefficient ({N},{M})')
 
-im0=ax[0].imshow(np.angle(ATF), 
+
+ax0 = plt.subplot(221)
+im0=ax0.imshow(np.angle(ATF), 
                  #cmap='gray',
                  extent = [np.amin(kx),np.amax(kx),np.amin(kx),np.amax(kx)],
                  )
-ax[0].set_xlabel('kx (1/$\mu$m)')
-ax[0].set_ylabel('ky (1/$\mu$m)')
-ax[0].set_title('ATF (phase)')
-fig.colorbar(im0,ax = ax[0])
+ax0.set_xlabel('kx (1/$\mu$m)')
+ax0.set_ylabel('ky (1/$\mu$m)')
+ax0.set_title('ATF (phase)')
+fig.colorbar(im0,ax = ax0)
 
-
-
+ax1 = plt.subplot(222)
 x = np.fft.fftfreq(Npixels, kx[0,1]-kx[0,0])
 y = np.fft.fftfreq(Npixels, ky[1,0]-ky[0,0])
 
 extent = [min(x),max(x), min(y),max(y)]
-im1=ax[1].imshow(PSF, 
+im1=ax1.imshow(PSF, 
                  #cmap='hot',
                  extent = extent
                  )
-ax[1].xaxis.zoom(4) 
-ax[1].yaxis.zoom(4)
-ax[1].set_xlabel('x ($\mu$m)')
-ax[1].set_ylabel('y ($\mu$m)')
-ax[1].set_title('PSF')
-  
+ax1.xaxis.zoom(4) 
+ax1.yaxis.zoom(4)
+ax1.set_xlabel('x ($\mu$m)')
+ax1.set_ylabel('y ($\mu$m)')
+ax1.set_title('PSF')
+ 
 
-
+ax2 = plt.subplot(212) 
+cx = int(MTF.shape[1]/2)
+plt1=ax2.plot(kx[cx,:],MTF[cx,:])
+ax2.set_xlabel('kx (1/$\mu$m)')
+ax2.set_ylabel('MTF')
+ax2.grid(True)
 
