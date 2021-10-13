@@ -18,11 +18,11 @@ mm = 1000*um
 
 n = 1 # refractive index
 
-wavelength = 0.532*um 
+wavelength = 0.520*um 
 
 f = 10*mm # focal length of the objective lens
 
-a = 5*mm  # radius of the the pupil
+a = 0.5*mm  # radius of the the pupil
 
 k = n/wavelength # wavenumber
 
@@ -37,7 +37,7 @@ print('The diffraction limited (Rayleigh) resolution is:', 1.22*wavelength/2/NA 
 k_cut_off = NA/wavelength # cut off frequency in the coherent case
 
 Npixels = 128
-b = 15 * mm # let's define a spatial extent of the pupil, larger than the pupil radius
+b = 1 * mm # let's define a spatial extent of the pupil, larger than the pupil radius
 xP = yP = np.linspace(-b, +b, Npixels)
 XP, YP = np.meshgrid(xP,yP)
 
@@ -50,24 +50,24 @@ ky = YP / a * k_cut_off
 k_rho = np.sqrt(kx**2 + ky**2)
 k_theta = np.arctan2(ky,kx)
 
-N = 2 # Zernike radial order 
-M = 2 # Zernike azimutal frequency
+N = 0 # Zernike radial order 
+M = 0 # Zernike azimutal frequency
 
-phase = nm_polynomial(N, M, k_rho/k_cut_off, k_theta, normalized = False) 
+phase = np.pi* nm_polynomial(N, M, k_rho/k_cut_off, k_theta, normalized = False) 
 
-weight = 3.14
+weight = 1
 
 ATF = np.exp (1.j * weight * phase) # Amplitude Transfer Function
 
-z = 2*um # defocus distance
-
-angular_spectum_propagator = np.exp(1.j*2*np.pi*np.sqrt(k**2-k_rho**2)*z)
+z = 200*um # defocus distance
+kz =np.sqrt(k**2-k_rho**2)
+angular_spectrum_propagator = np.exp(1.j*2*np.pi*kz*z)
 
 #evanescent_idx = (k_rho >= k)
 #evanescent_idx = np.isnan(angular_spectum_propagator)
 #angular_spectum_propagator[evanescent_idx] = 0 # exclude all kx,ky that would be evanescent
 
-ATF = ATF * angular_spectum_propagator
+ATF = ATF * angular_spectrum_propagator
 
 mask_idx = (k_rho > k_cut_off)
 ATF[mask_idx] = 0 # Creates a circular mask
@@ -100,8 +100,8 @@ im1=ax[1].imshow(PSF,
                  #cmap='hot',
                  extent = extent
                  )
-ax[1].xaxis.zoom(4) 
-ax[1].yaxis.zoom(4)
+ax[1].xaxis.zoom(1) 
+ax[1].yaxis.zoom(1)
 ax[1].set_xlabel('x ($\mu$m)')
 ax[1].set_ylabel('y ($\mu$m)')
 ax[1].set_title('PSF')

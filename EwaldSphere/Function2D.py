@@ -4,11 +4,12 @@ Created on 2 ago 2019
 @author: Andrea Bassi, Politecnico di Milano
 '''
 import numpy as np
-from xlrd.formula import num2strg
+#from xlrd.formula import num2strg
 #import matplotlib.image as mpimg
 
 def roundandconvert(num):
-    return num2strg(round(num,4))
+    #return num2strg(round(num,4))
+    return f'{num:.4f}'
 
 class function2D(object):
     '''

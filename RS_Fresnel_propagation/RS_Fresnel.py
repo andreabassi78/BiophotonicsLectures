@@ -108,7 +108,7 @@ indexes = (np.abs(X)>side/2) | (np.abs(Y)>side/2)
 E0[indexes] = 0
 
 """calculate the free space propagator """
-z = 200 * um
+z = 1000 * um
 D = kernelRS(X, Y, z, wavelength, n)
 #D = kernelFresnel(X, Y, z, wavelength, n)
 

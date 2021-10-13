@@ -38,8 +38,8 @@ b = 15 * mm # let's define a spatial extent of the pupil, larger than the pupil 
 xP = yP = np.linspace(-b, +b, Npixels)
 XP, YP = np.meshgrid(xP,yP)
 
-kx = XP * k / f  
-ky = YP * k / f  
+kx = XP * k / f 
+ky = YP * k / f 
 # kx = XP / a * k_cut_off # other way to calculate kx and ky
 # ky = YP / a * k_cut_off
 
@@ -47,16 +47,14 @@ ky = YP * k / f
 k_rho = np.sqrt(kx**2 + ky**2)
 k_theta = np.arctan2(ky,kx)
 
-N = 0 # Zernike radial order 
-M = 0 # Zernike azimutal frequency
+N = 3 # Zernike radial order 
+M = 1 # Zernike azimutal frequency
 
-phase = nm_polynomial(N, M, k_rho/k_cut_off, k_theta, normalized = False) 
+phase = np.pi*nm_polynomial(N, M, k_rho/k_cut_off, k_theta, normalized = False) 
 
-weight = 3.14159
+weight = 1 # weight of the polynomials in units of lambda (weight 0.5 means wavefront abberated of lamba/2)
 
 ATF = np.exp (1.j * weight * phase) # Amplitude Transfer Function
-
-z = 5*um # defocus distance
 
 mask_idx = (k_rho > k_cut_off)
 ATF[mask_idx] = 0 # Creates a circular mask
@@ -68,7 +66,8 @@ PSF = PSF/np.sum(PSF) # PSF normalized with its area
 
 OTF = fftshift(fft2(ifftshift(PSF)))
 
-MTF = np.real(OTF)
+MTF = np.abs(OTF) # Modulation Transfer Function
+# change to real to see the negative values of the MTF
 
 # %%% plot the ATF and the PSF 
 fig = plt.figure(figsize=(9, 9))
