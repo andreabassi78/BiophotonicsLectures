@@ -22,7 +22,7 @@ wavelength = 0.532*um
 
 f = 10*mm # focal length of the objective lens
 
-a = 6*mm  # radius of the the pupil
+a = 8*mm  # radius of the the pupil
 
 k = n/wavelength # wavenumber
 
@@ -51,9 +51,9 @@ cut_idx = (k_rho >= k_cut_off) # indexes of the locations outside of the pupil
 ATF0[cut_idx] = 0
 
 # insert an internal mask 
-# k_cut_in = k_cut_off *0.9
-# cut_idx = (k_rho <= k_cut_in) # indexes of the locations inside a certain radius
-# ATF0[cut_idx] = 0
+k_cut_in = k_cut_off *0.95
+cut_idx = (k_rho <= k_cut_in) # indexes of the locations inside a certain radius
+ATF0[cut_idx] = 0
                    
 PSF3D = np.zeros(((Npixels,Npixels,Npixels)))
 

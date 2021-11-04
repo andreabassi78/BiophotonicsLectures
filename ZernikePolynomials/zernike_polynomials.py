@@ -59,7 +59,7 @@ def nm_polynomial(n, m, rho, theta, normalized=True):
     if normalized:
         prefac = 1. / nm_normalization(n, m)
     else:
-        prefac = 1.
+        prefac = 0.5
     if m >= 0:
         return prefac * radial * np.cos(m0 * theta)
     else:
@@ -76,8 +76,8 @@ if __name__ == "__main__":
     rho = np.sqrt(X**2 + Y**2)
     theta = np.arctan2(Y,X)
     
-    n = 5  # Zernike radial order 
-    m = 1 # Zernike azimutal frequency
+    n = 9  # Zernike radial order 
+    m = 3 # Zernike azimutal frequency
     
     Z = nm_polynomial(n, m, rho, theta, normalized = False) 
     
@@ -93,4 +93,6 @@ if __name__ == "__main__":
                )
     
     plt.colorbar()
+    
+    print('Peak to valley distance:', np.amax(Z)-np.amin(Z))
    

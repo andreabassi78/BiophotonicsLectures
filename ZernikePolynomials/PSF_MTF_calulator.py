@@ -22,7 +22,7 @@ wavelength = 0.532*um
 
 f = 10*mm # focal length of the objective lens
 
-a = 5*mm  # radius of the the pupil
+a = 4*mm  # radius of the the pupil
 
 k = n/wavelength # wavenumber
 
@@ -33,7 +33,7 @@ print('The diffraction limited (Rayleigh) resolution is:', 1.22*wavelength/2/NA 
 
 k_cut_off = NA/wavelength # cut off frequency in the coherent case
 
-Npixels = 128
+Npixels = 256
 b = 15 * mm # let's define a spatial extent of the pupil, larger than the pupil radius
 xP = yP = np.linspace(-b, +b, Npixels)
 XP, YP = np.meshgrid(xP,yP)
@@ -47,14 +47,14 @@ ky = YP * k / f
 k_rho = np.sqrt(kx**2 + ky**2)
 k_theta = np.arctan2(ky,kx)
 
-N = 3 # Zernike radial order 
-M = 1 # Zernike azimutal frequency
+N = 2 # Zernike radial order 
+M = 0 # Zernike azimutal frequency
 
-phase = np.pi*nm_polynomial(N, M, k_rho/k_cut_off, k_theta, normalized = False) 
+phase = nm_polynomial(N, M, k_rho/k_cut_off, k_theta, normalized = False) 
 
-weight = 1 # weight of the polynomials in units of lambda (weight 0.5 means wavefront abberated of lamba/2)
+weight = 0.25 # weight of the polynomials in units of lambda (weight 1 means  wavefront abberated of lamba/2)
 
-ATF = np.exp (1.j * weight * phase) # Amplitude Transfer Function
+ATF = np.exp (1.j * 2* np.pi* weight * phase) # Amplitude Transfer Function
 
 mask_idx = (k_rho > k_cut_off)
 ATF[mask_idx] = 0 # Creates a circular mask
@@ -107,3 +107,11 @@ ax2.set_xlabel('kx (1/$\mu$m)')
 ax2.set_ylabel('MTF')
 ax2.grid(True)
 
+pupil_phase = (np.angle(ATF[k_rho < k_cut_off]))/(2*np.pi)
+print('The peak to valley (P-V) wavefront error is:', 
+      np.amax(pupil_phase)- np.amin(pupil_phase)
+      ) 
+
+print('The root mean sqared (RMS) wavefront error is:', 
+      np.sqrt(np.mean(pupil_phase**2))
+      ) 
