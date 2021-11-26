@@ -9,8 +9,6 @@ Created on Fri Sep 18 14:09:04 2020
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-
 L = 1 # extent of the space to be considered
 N = 512 # number of pixels
 x = y = np.linspace(-L/2, L/2, N)
@@ -18,8 +16,8 @@ X, Y = np.meshgrid(x,y)
 
 
 # %% Create a gaussian function
-sigma = 0.01
-Z = np.exp(-(X**2+Y**2)/sigma**2)
+# sigma = 0.01
+# Z = np.exp(-(X**2+Y**2)/sigma**2)
 
 
 # %% Create a rectangle function

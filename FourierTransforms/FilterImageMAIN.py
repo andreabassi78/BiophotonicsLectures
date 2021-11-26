@@ -24,7 +24,7 @@ ft=fftshift(fft2(ifftshift(Z)))
 
 filter_function = function2D(KX, KY)
 kmax=np.amax(KX)
-filter_function.functiontype('circle', kmax/5) 
+filter_function.functiontype('square', kmax/20) 
 """
 choose between 'circle', 'annulus', 'square', 'gaussian', 'ramp', 'delta'
 """
