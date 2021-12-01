@@ -2,10 +2,10 @@
 """
 Created on Tue Nov 30 22:55:35 2021
 
-Approximate an excitation and STED beams as squared cosinusoidal 
+Assumes an excitation and STED beams as squared cosinusoidal 
 and sinusoidal functions with zero (and maximum) in lambda/2NA
 
-Calculated the effective PSF and compares the full width at half maximum
+Calculates the effective PSF and compares the full width at half maximum
 (FWHM) to the thoretical one, as calculated in:
 
 Volker Westphal and Hell, Stefan W. 
