@@ -31,8 +31,8 @@ f = function2D(X,Y)
 X0 = 0 #translation in x
 Y0 = 0 #translation in y
 f.setcenter(X0, Y0)
-ftype = 'annulus' #change ftype to choose between 'circle', 'annulus','square','gaussian','sine',deltas
-f.functiontype(ftype, 1)
+ftype = 'square' #change ftype to choose between 'circle', 'annulus','square','gaussian','sine',deltas
+f.functiontype(ftype,0.051)
 Z = f.data #Z are the values of the function
 
 

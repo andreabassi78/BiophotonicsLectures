@@ -18,11 +18,11 @@ mm = 1000*um
 
 n = 1 # refractive index
 
-wavelength = 0.532*um 
+wavelength = 0.5*um 
 
 f = 10*mm # focal length of the objective lens
 
-a = 4*mm  # radius of the the pupil
+a = 2*mm  # radius of the the pupil
 
 k = n/wavelength # wavenumber
 
@@ -33,7 +33,7 @@ print('The diffraction limited (Rayleigh) resolution is:', 1.22*wavelength/2/NA 
 
 k_cut_off = NA/wavelength # cut off frequency in the coherent case
 
-Npixels = 256
+Npixels = 227
 b = 15 * mm # let's define a spatial extent of the pupil, larger than the pupil radius
 xP = yP = np.linspace(-b, +b, Npixels)
 XP, YP = np.meshgrid(xP,yP)
@@ -47,12 +47,12 @@ ky = YP * k / f
 k_rho = np.sqrt(kx**2 + ky**2)
 k_theta = np.arctan2(ky,kx)
 
-N = 2 # Zernike radial order 
-M = 0 # Zernike azimutal frequency
+N = 5 # Zernike radial order 
+M = 1 # Zernike azimutal frequency
 
 phase = nm_polynomial(N, M, k_rho/k_cut_off, k_theta, normalized = False) 
 
-weight = 0.25 # weight of the polynomials in units of lambda (weight 1 means  wavefront abberated of lamba/2)
+weight = 1 # weight of the polynomials in units of lambda (weight 1 means  wavefront abberated of lamba/2)
 
 ATF = np.exp (1.j * 2* np.pi* weight * phase) # Amplitude Transfer Function
 
@@ -93,8 +93,8 @@ im1=ax1.imshow(PSF,
                  #cmap='hot',
                  extent = extent
                  )
-ax1.xaxis.zoom(4) 
-ax1.yaxis.zoom(4)
+#ax1.xaxis.zoom(4) 
+#ax1.yaxis.zoom(4)
 ax1.set_xlabel('x ($\mu$m)')
 ax1.set_ylabel('y ($\mu$m)')
 ax1.set_title('PSF')

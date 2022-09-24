@@ -90,8 +90,8 @@ im1=ax1.imshow(PSF,
                  #cmap='hot',
                  extent = extent
                  )
-ax1.xaxis.zoom(4) 
-ax1.yaxis.zoom(4)
+#ax1.xaxis.zoom(4) 
+#ax1.yaxis.zoom(4)
 ax1.set_xlabel('x ($\mu$m)')
 ax1.set_ylabel('y ($\mu$m)')
 ax1.set_title('PSF')

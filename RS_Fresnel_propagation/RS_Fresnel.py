@@ -36,6 +36,11 @@ def kernelRS(X, Y, z, wavelength, n):
     r = sqrt(X**2 + Y**2 + z**2)
     return - 1.j*k*z/r * exp(1.j * 2*pi*k*r)/r * ( 1 - 1 /(1.j*2*pi*k*r) )
     
+
+
+
+
+
 def kernelFresnel(X, Y, z, wavelength, n):
     """Kernel for Fesnel propagation
 
@@ -82,7 +87,6 @@ def show_fields( fields, titles, kind = 'intensity', extent = (-50,50,-50,50) ):
                      title = titles[idx],
                      ) 
                           
- 
 um = 1.0
 wavelength = 0.532 * um 
 n = 1
@@ -103,12 +107,12 @@ E0 = np.ones([Nsamples, Nsamples])
 # #E0 = np.cos(2*pi* (kx*X+ky*Y)) 
 
 """ insert a square mask """
-side = 10 * um
+side = 50 * um
 indexes = (np.abs(X)>side/2) | (np.abs(Y)>side/2)
 E0[indexes] = 0
 
 """calculate the free space propagator """
-z = 1000 * um
+z = 5000 * um
 D = kernelRS(X, Y, z, wavelength, n)
 #D = kernelFresnel(X, Y, z, wavelength, n)
 
