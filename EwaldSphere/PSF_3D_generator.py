@@ -13,14 +13,14 @@ from AmplitudeTransferFunction_3D import amplitude_transfer_function
 N = 200  # the number of voxel in N**3
 um = 1.0   # base unit is um
 n = 1.0     # refractive index
-NA = 0.7 # numerical aperture
+NA = 0.8 # numerical aperture
 wavelength = 0.520 * um
 K = n / wavelength
 
 Detection_Mode = 'standard'
 # choose between 'standard' and '4pi'
 
-Microscope_Type = 'STED'
+Microscope_Type = 'aberrated'
 # choose between: 'widefield', 'gaussian', 'bessel', 'SIM', 'STED', 'aberrated' 
 
 # generate the Amplitude Transfer Function (also called Coherent Transfer Function)
@@ -83,14 +83,14 @@ axs[1,1].imshow(OTF_show, extent=[-Kextent,Kextent,-Kextent,Kextent])
 
 
 # zoom in:
-for i in (0,1): 
-    for j in (0,1):
-        if j == 1:
-            zoom_factor = Kextent/K/2
-        else:
-            zoom_factor = Kextent/K
-        axs[i,j].xaxis.zoom(zoom_factor) 
-        axs[i,j].yaxis.zoom(zoom_factor)
+# for i in (0,1): 
+#     for j in (0,1):
+#         if j == 1:
+#             zoom_factor = Kextent/K/2
+#         else:
+#             zoom_factor = Kextent/K
+#         axs[i,j].xaxis.zoom(zoom_factor) 
+#         axs[i,j].yaxis.zoom(zoom_factor)
         
     
 # finally, render the figures

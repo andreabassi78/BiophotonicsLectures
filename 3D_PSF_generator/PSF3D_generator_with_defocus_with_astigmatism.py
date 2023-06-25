@@ -14,26 +14,27 @@ import matplotlib.pyplot as plt
 um = 1.0
 mm = 1000.0
 
-Npixels = 256 # Pixels in x,y and number of planes z
+Npixels = 128 # Pixels in x,y and number of planes z
 
 n = 1 # refractive index
 
 wavelength = 0.532*um 
 
-f = 10*mm # focal length of the objective lens
+M = 63 # magnification
 
-a = 8*mm  # radius of the the pupil
+f = 200*mm / M # focal length of the objective lens
+
+NA = 0.75 # Numerial aperture (assuming Abbe sine condition)
+a = f*NA/n  # radius of the the pupil
 
 k = n/wavelength # wavenumber
 
-NA = n*a/f # Numerial aperture (assuming Abbe sine condition)
-
-dz = 0.05 * um
+dz = 0.1 * um
 
 # %% Start calculation
 
 # define the space at the pupil
-b = 50 * mm 
+b = 2*a 
 xP = yP = np.linspace(-b, +b, Npixels)
 XP, YP = np.meshgrid(xP,yP)
 
@@ -47,6 +48,9 @@ k_cut_off = NA/wavelength # cut off frequency in the coherent case
 
 # create a constant ATF
 ATF0 = np.ones( [Npixels, Npixels], np.complex)
+f_cyl = 4000*mm
+ATF0 = np.exp(-1.j*2*np.pi*k*YP**2/(2*f_cyl))
+
 cut_idx = (k_rho >= k_cut_off) # indexes of the locations outside of the pupil
 ATF0[cut_idx] = 0
 
@@ -90,8 +94,9 @@ for zi in z:
 # %% draw figure
 plane_y = round(Npixels/2)
 plane_z = round(Npixels/2)
+plane_x = round(Npixels/2)
 
-fig2, axs = plt.subplots(1, 2, figsize=(9, 5), tight_layout=False)
+fig2, axs = plt.subplots(1, 3, figsize=(9, 3), tight_layout=False)
 axs[0].set_title('|PSF(x,y,0)|')  
 axs[0].set(xlabel = 'x ($\mu$m)')
 axs[0].set(ylabel = 'y ($\mu$m)')
@@ -102,3 +107,8 @@ axs[1].set_title('|PSF(x,0,z)|')
 axs[1].set(xlabel = 'x ($\mu$m)')
 axs[1].set(ylabel = 'z ($\mu$m)')
 axs[1].imshow(PSF3D[:,plane_y,:], extent = [np.amin(x)+dr,np.amax(x),np.amin(z),np.amax(z)])
+
+axs[2].set_title('|PSF(0,y,z)|')  
+axs[2].set(xlabel = 'y ($\mu$m)')
+axs[2].set(ylabel = 'z ($\mu$m)')
+axs[2].imshow(PSF3D[:,:,plane_x], extent = [np.amin(x)+dr,np.amax(x),np.amin(z),np.amax(z)])

@@ -33,8 +33,8 @@ print('The diffraction limited (Rayleigh) resolution is:', 1.22*wavelength/2/NA 
 
 k_cut_off = NA/wavelength # cut off frequency in the coherent case
 
-Npixels = 227
-b = 15 * mm # let's define a spatial extent of the pupil, larger than the pupil radius
+Npixels = 127
+b = 8 * mm # let's define a spatial extent of the pupil, larger than the pupil radius
 xP = yP = np.linspace(-b, +b, Npixels)
 XP, YP = np.meshgrid(xP,yP)
 
@@ -47,8 +47,8 @@ ky = YP * k / f
 k_rho = np.sqrt(kx**2 + ky**2)
 k_theta = np.arctan2(ky,kx)
 
-N = 5 # Zernike radial order 
-M = 1 # Zernike azimutal frequency
+N = 2 # Zernike radial order 
+M = 2 # Zernike azimutal frequency
 
 phase = nm_polynomial(N, M, k_rho/k_cut_off, k_theta, normalized = False) 
 

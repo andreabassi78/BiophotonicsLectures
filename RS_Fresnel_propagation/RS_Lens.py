@@ -57,13 +57,14 @@ def show_fields( fields, titles, kind = 'intensity', extent = (-50,50,-50,50) ):
                      ylabel = ylabel,
                      title = titles[idx],
                      ) 
+    plt.show()
 
 um = 1.0
       
 n = 1
 wavelength = 0.532 * um 
-z1 = 300 * um
-z2 = 300 * um 
+z1 = 600 * um
+z2 = 600 * um 
 
 k = n / wavelength
 

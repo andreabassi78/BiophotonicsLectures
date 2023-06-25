@@ -29,7 +29,7 @@ xP = yP = np.linspace(-b, +b, Npixels)
 XP, YP = np.meshgrid(xP,yP)
 rhoP = np.sqrt(XP**2+YP**2) 
 pupil = np.ones([Npixels, Npixels])
-# pupil[xP >0] = -1 # STED-like 
+#pupil[xP >0] = -1 # STED-like 
 pupil[rhoP>a] = 0
 # pupil[rhoP<a/2] = 0 # Bessel-like
 
@@ -37,18 +37,20 @@ plt.figure()
 plt.imshow(pupil)
 plt.colorbar()
 
-ASF = ifftshift(ifft2(fftshift(pupil))) # Amplitude Spread Function
+ASF = ifftshift(ifft2(pupil)) # Amplitude Spread Function
 PSF = np.abs(ASF)**2 # Point Spread Function
-PSF = PSF / np.amax(PSF)
+PSF = PSF
 
 plt.figure()
 plt.imshow(PSF)
 
-OTF = fftshift(fft2(ifftshift(PSF)))
+OTF = fftshift(fft2(PSF))
 MTF = np.abs(OTF)
+
 
 plt.figure()
 plt.imshow(MTF)
+plt.colorbar()
 
 plt.figure()
 kx = xP * k / f 

@@ -77,7 +77,7 @@ if __name__ == "__main__":
     theta = np.arctan2(Y,X)
     
     n = 4  # Zernike radial order 
-    m = -4 # Zernike azimutal frequency
+    m = 0 # Zernike azimutal frequency
     
     Z = nm_polynomial(n, m, rho, theta, normalized = False) 
     

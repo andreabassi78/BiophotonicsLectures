@@ -12,9 +12,9 @@ Volker Westphal and Hell, Stefan W.
 "Nanoscale Resolution in the Focal Plane of an Optical Microscope.” 
 Physical Review Letters 98, 143903, (2005)
 
-
 @author: Andrea Bassi
 """
+
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -23,19 +23,18 @@ x_extent = 0.26 * um
 dx = 0.001 * um
 x = np.arange(-x_extent, x_extent, dx)
 
-
 NA = 1
-wavelength = 0.6
+wavelength = 0.5
 
 delta = np.pi*NA/wavelength*x
- 
+
 Iexc = np.cos(delta)**2 # excitation has the first zero in lambda/2NA
-Isted = np.sin(delta)**2  # sted has the first zero in lambda/2NA
-ratio = 10 # I_STED_max / I_Sat
+Isted = np.sin(delta)**2 # sted has the first zero in lambda/2NA
 
-PSF =Iexc * np.exp( -ratio * Isted )
-PSF_approx = 1 - ratio * (delta)**2
+ratio = 20 # I_STED_max / I_Sat
 
+PSF = Iexc * np.exp( -ratio * Isted )
+PSF_approx = 1 - (ratio+1) * (delta)**2
 
 
 #%% Find FWHM
@@ -44,7 +43,7 @@ def find_nearest(array, value):
     idx = (np.abs(array - value)).argmin()
     return idx
 
-idx = find_nearest(PSF, 0.5) #find the index corresponging to FWHM
+idx = find_nearest(PSF, np.amax(PSF)*0.5) #find the index corresponging to FWHM
 
 fwhm = 2* np.abs(x[idx])
 
@@ -103,3 +102,4 @@ ax.legend(['exc','sted','effective'],
 
 fig.tight_layout()
 plt.rcParams.update(plt.rcParamsDefault)
+plt.show()

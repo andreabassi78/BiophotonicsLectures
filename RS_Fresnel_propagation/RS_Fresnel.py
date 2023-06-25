@@ -25,8 +25,7 @@ def kernelRS(X, Y, z, wavelength, n):
         wavelength (float): wavelength of incident fields
         z (float): distance for propagation
         n (float): refraction index of background
-        kind (str): 'z', 'x', '0': for simplifying vector propagation
-
+        
     Returns:
         complex np.array: kernel    
 
@@ -35,11 +34,6 @@ def kernelRS(X, Y, z, wavelength, n):
     k = n / wavelength
     r = sqrt(X**2 + Y**2 + z**2)
     return - 1.j*k*z/r * exp(1.j * 2*pi*k*r)/r * ( 1 - 1 /(1.j*2*pi*k*r) )
-    
-
-
-
-
 
 def kernelFresnel(X, Y, z, wavelength, n):
     """Kernel for Fesnel propagation
@@ -86,6 +80,7 @@ def show_fields( fields, titles, kind = 'intensity', extent = (-50,50,-50,50) ):
                      ylabel = ylabel,
                      title = titles[idx],
                      ) 
+    plt.show()
                           
 um = 1.0
 wavelength = 0.532 * um 
@@ -101,20 +96,20 @@ X, Y = np.meshgrid(x,y)
 E0 = np.ones([Nsamples, Nsamples])
 
 # """ create a plane wave with certain kx and ky """  
-# kx = 0.0
+# kx = 0.1
 # ky = 0.0
 # E0 = np.exp(-1.j*2*pi* (kx*X+ky*Y))
-# #E0 = np.cos(2*pi* (kx*X+ky*Y)) 
+# E0 = np.cos(2*pi* (kx*X+ky*Y)) 
 
 """ insert a square mask """
-side = 50 * um
+side = 30 * um
 indexes = (np.abs(X)>side/2) | (np.abs(Y)>side/2)
 E0[indexes] = 0
 
 """calculate the free space propagator """
-z = 5000 * um
+z = 1000 * um
 D = kernelRS(X, Y, z, wavelength, n)
-#D = kernelFresnel(X, Y, z, wavelength, n)
+D = kernelFresnel(X, Y, z, wavelength, n)
 
 """ calculate E1 as the convolution of E0 and D, using Fast Fourier Transform """
 dx = x[1]-x[0]
