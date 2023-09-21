@@ -5,7 +5,7 @@ Based on the kernel functions found in Diffractio module (https://pypi.org/proje
 
 Notation from Mertz, "Introduction to Optical Microscopy"
 
-Simulates the propagation of a field using Rayleight-Sommerfield or Fresnel integrals 
+Simulates the propagation of a field using Fresnel integrals 
 
 @author: Andrea Bassi
 """
@@ -15,25 +15,6 @@ import matplotlib.pyplot as plt
 from numpy import pi, sqrt, exp
 from numpy.fft import fft2,ifft2, ifftshift
 
-
-def kernelRS(X, Y, z, wavelength, n):
-    """Kernel for Rayleight-Sommerfield propagation
-
-    Parameters:
-        X (numpy.array): positions x
-        Y (numpy.array): positions y
-        wavelength (float): wavelength of incident fields
-        z (float): distance for propagation
-        n (float): refraction index of background
-        
-    Returns:
-        complex np.array: kernel    
-
-    """
-    
-    k = n / wavelength
-    r = sqrt(X**2 + Y**2 + z**2)
-    return - 1.j*k*z/r * exp(1.j * 2*pi*k*r)/r * ( 1 - 1 /(1.j*2*pi*k*r) )
 
 def kernelFresnel(X, Y, z, wavelength, n):
     """Kernel for Fesnel propagation
@@ -108,13 +89,12 @@ E0[indexes] = 0
 
 """calculate the free space propagator """
 z = 1000 * um
-D = kernelRS(X, Y, z, wavelength, n)
+
 D = kernelFresnel(X, Y, z, wavelength, n)
 
 """ calculate E1 as the convolution of E0 and D, using Fast Fourier Transform """
-dx = x[1]-x[0]
-dy = y[1]-y[0]
-E1 = ifftshift( ifft2 (fft2(E0) * fft2(D) ) ) * dx *dy 
+
+E1 = ifftshift( ifft2 (fft2(E0) * fft2(D) ) )
 
 """ show the fields as magnitude, intensity, phase or real part """
 show_fields(fields = (E0,E1),
