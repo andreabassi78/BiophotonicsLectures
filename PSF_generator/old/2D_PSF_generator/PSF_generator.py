@@ -21,7 +21,7 @@ wavelength = 0.532*um
 f = 20*mm # focal length of the objective lens
 a = 10*mm  # radius of the the pupil
 k = n/wavelength # wavenumber
-NA = n*a/f # Numerial aperture (assuming Abbe sine condition)
+NA = n*a/f # Numerial aperture (assuming small angles)
 
 # create the pupil
 b = 50 * mm 
@@ -47,7 +47,6 @@ plt.imshow(PSF)
 OTF = fftshift(fft2(PSF))
 MTF = np.abs(OTF)
 
-
 plt.figure()
 plt.imshow(MTF)
 plt.colorbar()
@@ -59,3 +58,4 @@ plt.plot(kx, MTF[Npixels//2,:])
 plt.xlabel('kx (1/um)')
 plt.ylabel('MTF (a.u.)')
 
+plt.show()
