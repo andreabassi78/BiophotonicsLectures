@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 
 um = 1.0
 mm = 1000.0
+pi = np.pi
 
 Npixels = 128 # Pixels in x,y and number of planes z
 n = 1 # refractive index
@@ -21,7 +22,7 @@ k = n/wavelength # wavenumber
 NA = n*(a/f) # Numerical aperture
 
 # define the space at the pupil
-b = 20 * mm 
+b = 15 * mm 
 xP = yP = np.linspace(-b, +b, Npixels)
 XP, YP = np.meshgrid(xP,yP)
 
@@ -35,9 +36,9 @@ k_cut_off = NA/wavelength # cut off frequency in the coherent case
 ATF = np.ones([Npixels, Npixels])                  
 
 # add defocus
-z = 5.0 * um
+z = 5.0*um
 kz = np.sqrt(k**2-k_perpendicular**2)
-angular_spectrum_propagator = np.exp(1.j*2*np.pi*kz*z)
+angular_spectrum_propagator = np.exp(1.j*2*pi*kz*z)
 ATF = ATF * angular_spectrum_propagator
 
 # cut frequencies outside of the pupil
