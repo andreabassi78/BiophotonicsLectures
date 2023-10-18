@@ -28,7 +28,7 @@ class amplitude_transfer_function(object):
         self.N = N
         self.n = n
         self.K_xyz_amplitude = K_xyz_extent # half length of the axes Kx,Ky,Kz
-        self.values = np.zeros((N,N,N), dtype = np.complex)     
+        self.values = np.zeros((N,N,N))     
         kx = ky = kz = np.linspace(-K_xyz_extent,K_xyz_extent, N)
         self.KX, self.KY, self.KZ = np.meshgrid(kx,ky,kz)     
         self.dK = kx[1]-kx[0] #sampling, in K space
@@ -103,6 +103,6 @@ class amplitude_transfer_function(object):
         asf = ifftshift(ifft2(fftshift(pupil.data))) 
         projection = pupil.data[:]
         projection.shape = self.N,self.N,1 # reshapes the pupil to be projected on self.values along kz
-        self.values *=  projection
+        self.values = self.values*projection
         
         return pupil.data, asf

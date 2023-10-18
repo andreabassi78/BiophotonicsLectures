@@ -35,14 +35,27 @@ k_cut_off = NA/wavelength # cut off frequency in the coherent case
 # create a constant ATF
 ATF = np.ones([Npixels, Npixels])                  
 
-# add defocus
-z = -2.0*um
+# add phase aberration
+n1 = 1.5
+k0 = n/wavelength
+k1 = n1/wavelength 
+thickness = 30*um # glass slab thickness
+k0_z = np.sqrt(k0*2-k_perpendicular*2)
+k1_z = np.sqrt(k1*2-k_perpendicular*2)
+phase = 2*pi*(k1_z-k0_z)*thickness # phase added by propagation in the slab, no approximation
+
+# correct for the defocus introduced by the slab (that would move the focusing point forward)
+phase -= 2*pi * k_perpendicular**2/2/k0 * thickness *(1-n/n1)
+ATF = ATF * np.exp(-1.j*(phase))
+
+# add defocus due to propagation from the microscope object plane
+z = -0*um
 kz = np.sqrt(k**2-k_perpendicular**2)
 angular_spectrum_propagator = np.exp(1.j*2*pi*kz*z)
 ATF = ATF * angular_spectrum_propagator
 
-# cut frequencies outside of the cut off
-cut_idx = (k_perpendicular >= k_cut_off) 
+# cut frequencies outside of the pupil
+cut_idx = (k_perpendicular >= k_cut_off) # indexes of the locations outside of the pupil 
 ATF[cut_idx] = 0
 
 ASF = ifftshift(ifft2(ATF)) # Amplitude Spread Function   

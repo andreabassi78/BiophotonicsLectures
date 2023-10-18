@@ -26,37 +26,31 @@ b = 15 * mm
 xP = yP = np.linspace(-b, +b, Npixels)
 XP, YP = np.meshgrid(xP,yP)
 
-kx = XP * k / f # assuming Abbe's sine condition
-ky = YP * k / f # assuming Abbe's sine condition
+kx = XP * k / f 
+ky = YP * k / f 
 
 k_perpendicular = np.sqrt(kx**2 + ky**2) # k perpendicular
 k_cut_off = NA/wavelength # cut off frequency in the coherent case
 
 # create a constant ATF
 ATF = np.ones([Npixels, Npixels])                  
-
-# add defocus
-z = -2.0*um
-kz = np.sqrt(k**2-k_perpendicular**2)
-angular_spectrum_propagator = np.exp(1.j*2*pi*kz*z)
-ATF = ATF * angular_spectrum_propagator
-
-# cut frequencies outside of the cut off
-cut_idx = (k_perpendicular >= k_cut_off) 
+# cut frequencies outside of the cutoff
+cut_idx = (k_perpendicular >= k_cut_off)
 ATF[cut_idx] = 0
 
 ASF = ifftshift(ifft2(ATF)) # Amplitude Spread Function   
 PSF = np.abs(ASF)**2 # Point Spread Function  
 
 # calculate the space at the object plane
-dr = 1/2/np.amax(kx)
-x = y = np.linspace (- dr*Npixels/2, + dr*Npixels/2, Npixels)
+dxy = 1/2/np.amax(kx)
+print(dxy)
+x = y = np.linspace (- dxy*Npixels/2, + dxy*Npixels/2, Npixels)
 
 fig0, ax0 = plt.subplots()
 ax0.imshow(PSF, extent = [np.amin(x),np.amax(x),np.amin(y),np.amax(y)])
 plt.xlabel('x (um)')
 plt.ylabel('y (um)')
-plt.title(f'|PSF(x,y,z={z}um)|')
+plt.title(f'|PSF(x,y|')
 
 OTF = fftshift(fft2(PSF)) # Optical Transfer Function 
 MTF = np.abs(OTF) # Modulation Trnasfer Function
@@ -65,6 +59,6 @@ fig1, ax1 = plt.subplots()
 ax1.plot(kx[Npixels//2,:], MTF[Npixels//2,:])
 plt.xlabel('kx (1/um)')
 plt.ylabel('MTF (arbitrary units)')
-plt.title(f'|MTF(kx,ky,z={z}um)|')
+plt.title(f'|MTF(kx,ky|')
 
 plt.show()

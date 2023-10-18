@@ -20,7 +20,7 @@ K = n / wavelength
 Detection_Mode = 'standard'
 # choose between 'standard' and '4pi'
 
-Microscope_Type = 'aberrated'
+Microscope_Type = 'widefield'
 # choose between: 'widefield', 'gaussian', 'bessel', 'SIM', 'STED', 'aberrated' 
 
 # generate the Amplitude Transfer Function (also called Coherent Transfer Function)
