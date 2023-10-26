@@ -15,7 +15,7 @@ w0 = 0.29 * um
 
 zr = np.pi * w0**2 *n / wavelength
 print(zr)
-# define the space at the pupil
+# define the space at the focus plane
 a = 8 * um 
 b = 8 * um
 rho = np.linspace(-a, +a, Npixels)
