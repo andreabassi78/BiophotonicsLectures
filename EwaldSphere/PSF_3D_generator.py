@@ -13,7 +13,7 @@ from AmplitudeTransferFunction_3D import amplitude_transfer_function
 N = 200  # the number of voxel in N**3
 um = 1.0   # base unit is um
 n = 1.0     # refractive index
-NA = 0.8 # numerical aperture
+NA = 0.80 # numerical aperture
 wavelength = 0.520 * um
 K = n / wavelength
 
