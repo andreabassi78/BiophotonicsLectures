@@ -11,7 +11,7 @@ def convolve(X,Y):
 # open an image that will be used as the phase of the object. 
 # Note that the image "filename" must be in the same folder of this .py file
 full_path = os.path.realpath(__file__)
-folder, _ = os.path.split(full_path)
+folder, _ = os.path.split(full_path) 
 filename = 'fibers.tif'
 phase = plt.imread(os.path.join(folder,filename))
 
