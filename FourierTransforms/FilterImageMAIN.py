@@ -7,7 +7,7 @@ Optical Microscopy Course (Biophotonics)
 
 '''
 
-import numpy as np
+import numpy as np 
 import matplotlib.pyplot as plt
 from numpy.fft import fftshift, ifftshift, fft2, ifft2
 from ImageType import image
