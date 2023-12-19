@@ -21,7 +21,7 @@ phase = phase/np.amax(phase) * np.pi/10
 # create electric field at the object
 E0 = np.exp(1.j*phase)
 
-# create an Amplitude Transfer Function (rescaled version of the pupil) and generate the 2D PSF
+# create an Amplitude Transfer Function (rescaled version of the pupil) 
 um = 1
 NA = 0.3
 wavelength = 0.500 * um
@@ -40,15 +40,15 @@ k_cut_off = NA/wavelength
 indexes = np.sqrt(KX**2+KY**2)<k_cut_off
 ATF[indexes] = 1
 
-# Zernike pupil
+""" Zernike pupil """
 epsilon = 0.05 * k_cut_off
 indexes = np.sqrt(KX**2+KY**2)<epsilon
-transmittance = 1 # if <1 the center of the pupil becomes partially absorbing
+transmittance = 0.6 # if <1 the center of the pupil becomes partially absorbing
 ATF[indexes] = 1.j * transmittance
 
-# Schlieren pupil
-indexes = KX<0
-# ATF[indexes] = 0
+"""Schlieren pupil """
+#indexes = KX<0
+#ATF[indexes] = 0
 
 
 # Calculate the Amplitude Spread Function
