@@ -116,3 +116,5 @@ ax3.set_xlabel('kx (1/$\mu$m)')
 ax3.set_ylabel('ky (1/$\mu$m)')
 ax3.set_title('OTF (phase)')
 fig.colorbar(im3,ax = ax3)
+
+plt.show()

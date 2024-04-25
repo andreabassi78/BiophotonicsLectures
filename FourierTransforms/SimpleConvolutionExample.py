@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
+from PIL import Image
 
 folder = "C:\\Users\\andre\\OneDrive - Politecnico di Milano\\Documenti\\PythonProjects\\Lectures\\FourierTransforms\\"
 filename = 'nyc.jpg'
