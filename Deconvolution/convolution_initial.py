@@ -8,7 +8,7 @@ import matplotlib.image as mpimg
 full_path = os.path.realpath(__file__) 
 folder, _ = os.path.split(full_path) # this selects the folder of this .py file  
 sample_filename = 'filaments.tif'
-psf_filename = 'psf.tif'
+psf_filename = 'psf_aberrated.tif'
 
 sample = np.float32(mpimg.imread(folder+'/'+sample_filename))
 psf = np.float32(mpimg.imread(folder+'/'+psf_filename))
@@ -18,11 +18,12 @@ psf = psf/np.sum(psf)
 
 plt.figure()
 plt.subplot(1, 2, 1)
-plt.imshow(sample)
+plt.imshow(sample,cmap='gray')
 plt.title('Original sample')
 plt.subplot(1, 2, 2)
-plt.imshow(psf)
+plt.imshow(psf,cmap='gray')
 plt.title('Point Spread Function')
+
 
 F_sample = fftshift(fft2(sample))
 F_psf = fftshift(fft2(psf)) # Optical Transfer funtion
@@ -43,7 +44,7 @@ noise = np.random.rand(sample.shape[0], sample.shape[1])
 image += alpha* noise
 
 plt.figure()
-plt.imshow(image)
+plt.imshow(image,cmap='gray')
 plt.colorbar()
 plt.title('Image at the detector')
 plt.show()
