@@ -80,10 +80,10 @@ X, Y = np.meshgrid(x,y)
 E0 = np.ones([Nsamples, Nsamples])
 
 # """ create a plane wave with certain kx and ky """  
-# kx = 0.1
-# ky = 0.0
-# E0 = np.exp(-1.j*2*pi* (kx*X+ky*Y))
-# E0 = np.cos(2*pi* (kx*X+ky*Y)) 
+kx = 0.1
+ky = 0.0
+#E0 = np.exp(1.j*2*pi* (kx*X+ky*Y))
+#E0 = np.cos(2*pi* (kx*X+ky*Y)) 
 
 """ insert a square mask """
 side = 30 * um
