@@ -12,8 +12,8 @@ from numpy import pi, exp, sqrt
 from numpy.fft import fft2, ifft2, ifftshift
 import matplotlib.pyplot as plt
 
-def kernelRS(X, Y, z, wavelength, n):
-    """Kernel for Rayleight-Sommerfield propagation
+def D(X, Y, z, wavelength, n):
+    """Kernel for Rayleight-Sommerfield propagation. 
 
     Parameters:
         X (numpy.array): positions x
@@ -23,7 +23,7 @@ def kernelRS(X, Y, z, wavelength, n):
         n (float): refraction index of background
         
     Returns:
-        complex np.array: kernel    
+        complex np.array: free space propagator    
 
     """
     
@@ -67,8 +67,8 @@ um = 1.0
       
 n = 1
 wavelength = 0.532 * um 
-z1 = 300 * um
-z2 = 300 * um 
+z1 = 500 * um
+z2 = 1000 * um 
 
 k = n / wavelength
 
@@ -85,18 +85,18 @@ indexes = (X**2+Y**2) > radius**2
 E0[indexes] = 0.0
 
 # %% calculate the first free space propagator
-D1 = kernelRS(X, Y, z1, wavelength, n)
+D1 = D(X, Y, z1, wavelength, n)
 
 # %%calculate E1_minus, the field just before the lens
 E1_minus = ifftshift( ifft2 (fft2(E0) * fft2(D1) ) )
 
 # %%calculate E1_plus, the field just after the lens
 f = 300 *um
-lens = np.exp(- 1.j * 2 * pi * k * ((X**2 / (2 * f)) + Y**2 / (2 * f)))
+lens = np.exp(-1.j * 2 * pi * k * ((X**2 / (2 * f)) + Y**2 / (2 * f)))
 E1_plus = E1_minus * lens 
 
 # %% calculate the second free space propagator
-D2 = kernelRS(X, Y, z2, wavelength, n)
+D2 = D(X, Y, z2, wavelength, n)
 
 # %% calculate E2, the field at z1+z2  
 E2 = ifftshift( ifft2 (fft2(E1_plus) * fft2(D2) ) )
