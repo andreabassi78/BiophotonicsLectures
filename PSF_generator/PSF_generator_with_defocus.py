@@ -36,7 +36,7 @@ k_cut_off = NA/wavelength # cut off frequency in the coherent case
 ATF = np.ones([Npixels, Npixels])                  
 
 # add defocus
-z = -2.0*um
+z = 5.0*um
 kz = np.sqrt(k**2-k_perpendicular**2)
 angular_spectrum_propagator = np.exp(1.j*2*pi*kz*z)
 ATF = ATF * angular_spectrum_propagator
@@ -45,7 +45,7 @@ ATF = ATF * angular_spectrum_propagator
 cut_idx = (k_perpendicular >= k_cut_off) 
 ATF[cut_idx] = 0
 
-ASF = ifftshift(ifft2(ATF)) # Amplitude Spread Function   
+ASF = ifftshift(ifft2(fftshift(ATF))) # Amplitude Spread Function   
 PSF = np.abs(ASF)**2 # Point Spread Function  
 
 # calculate the space at the object plane
@@ -58,8 +58,8 @@ plt.xlabel('x (um)')
 plt.ylabel('y (um)')
 plt.title(f'|PSF(x,y,z={z}um)|')
 
-OTF = fftshift(fft2(PSF)) # Optical Transfer Function 
-MTF = np.abs(OTF) # Modulation Trnasfer Function
+OTF = fftshift(fft2(ifftshift(PSF))) # Optical Transfer Function 
+MTF = np.real(OTF) # Modulation Trnasfer Function
 
 fig1, ax1 = plt.subplots()
 ax1.plot(kx[Npixels//2,:], MTF[Npixels//2,:])
