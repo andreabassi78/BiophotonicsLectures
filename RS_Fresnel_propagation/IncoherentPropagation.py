@@ -9,7 +9,7 @@ as a quadratic phase mask
 
 import numpy as np
 from numpy import pi, exp, sqrt
-from numpy.fft import fft2, ifft2, ifftshift
+from numpy.fft import fft2, ifft2, ifftshift,fftshift
 import matplotlib.pyplot as plt
 
 def D(X, Y, z, wavelength, n):
@@ -67,8 +67,8 @@ um = 1.0
       
 n = 1
 wavelength = 0.532 * um 
-z1 = 300 * um
-z2 = 300 * um 
+z1 = 600 * um
+z2 = 600 * um 
 
 k = n / wavelength
 
@@ -78,21 +78,29 @@ x = y = np.linspace(-L/2, +L/2, Nsamples)
 X, Y = np.meshgrid(x,y)
 
 
-# %% create a constant field E0 and a mask
-E0 = np.ones([Nsamples, Nsamples])
-radius = 20.0 * um
-indexes = (X**2+Y**2) > radius**2
-E0[indexes] = 0.0
+# %% create a incoherent field E0 and a mask
+weight = 1.0
+random_phases = np.random.random([Nsamples, Nsamples])*weight
+print(random_phases)
+E0 = np.exp(1.j*2*pi*random_phases)
+side = 20.0 * um
+indexes = (np.abs(X)>side/2) | (np.abs(Y)>side/2)
+E0[indexes] = 0
 
 # %% calculate the first free space propagator
 D1 = D(X, Y, z1, wavelength, n)
 
 # %%calculate E1_minus, the field just before the lens
-E1_minus = ifftshift( ifft2 (fft2(E0) * fft2(D1) ) )
+E1_minus = ifftshift( ifft2 (fft2(ifftshift(E0)) * fft2(ifftshift(D1)) ) )
 
 # %%calculate E1_plus, the field just after the lens
 f = 300 *um
 lens = np.exp(-1.j * 2 * pi * k * ((X**2 / (2 * f)) + Y**2 / (2 * f)))
+# create a pupil for the lens
+radius = 50
+indexes = (X**2+Y**2) > radius**2
+lens[indexes] = 0.0
+
 E1_plus = E1_minus * lens 
 
 # %% calculate the second free space propagator
@@ -103,8 +111,8 @@ E2 = ifftshift( ifft2 (fft2(E1_plus) * fft2(D2) ) )
 
 #%% show the fields as intensity, phase or real part
 plt.rcParams['figure.dpi'] = 300
-show_fields(fields = (E0,E1_minus,E2),
-            titles = ('E0','E1-','E2'),
-            kind = 'magnitude',
+show_fields(fields = (E0,E1_plus,E2),
+            titles = ('E0','E1+','E2'),
+            kind = 'abs',
             extent = (-L/2, +L/2, -L/2, +L/2)
             )
