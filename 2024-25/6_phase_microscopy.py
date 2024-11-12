@@ -41,13 +41,15 @@ indexes = np.sqrt(KX**2+KY**2)<k_cut_off
 ATF[indexes] = 1
 
 # add a Zernike pupil
-# epsilon = ....
-#
+epsilon = 0.05*k_cut_off
+indexes = np.sqrt(KX**2+KY**2) < epsilon
+transmittance = 0.6
+ATF[indexes] = 1.j *transmittance
 #
 
 # add a Schlieren pupil
-##
-#
+indexes = KX <0
+# ATF[indexes] = 0
 #
 
 # Calculate the Amplitude Spread Function
