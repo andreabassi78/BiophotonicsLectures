@@ -43,7 +43,7 @@ ATF[indexes] = 1
 """ Zernike pupil """
 epsilon = 0.05 * k_cut_off
 indexes = np.sqrt(KX**2+KY**2)<epsilon
-transmittance = 0.6 # if <1 the center of the pupil becomes partially absorbing
+transmittance = 0.3 # if <1 the center of the pupil becomes partially absorbing
 ATF[indexes] = 1.j * transmittance
 
 """Schlieren pupil """
