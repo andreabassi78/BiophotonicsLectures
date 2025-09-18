@@ -12,7 +12,7 @@ def D(x,y,z,wavelength,n):
 um = 1.0 
 
 L = 300*um
-z = 1000*um
+z = 100*um
 wavelength = 0.532*um
 n = 1
 

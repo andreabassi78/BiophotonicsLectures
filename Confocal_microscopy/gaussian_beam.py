@@ -14,7 +14,7 @@ pi = np.pi
 Npixels = 256 # Pixels in x and z
 wavelength = 0.500*um 
 n = 1
-w0 = 0.199 * um
+w0 = 0.417 * um
 zr = pi * w0**2 *n / wavelength
 
 # define the space at the focus plane
@@ -28,7 +28,7 @@ w = w0 * np.sqrt(1+(Z/zr)**2)
 I = np.exp(-2*Rho**2/w**2) * (w0/w)**2 # Intensity of a Gaussian beam that simulates the illumination and (ideal) detection PSF
 
 pinhole = np.zeros_like(I)
-r = 22.5/40 * um # radius of the pinhole at the object 
+r = 50/40 * um # radius of the pinhole at the object 
 ph = np.abs(rho) < r
 pinhole[Npixels//2, ph] = 1
 
