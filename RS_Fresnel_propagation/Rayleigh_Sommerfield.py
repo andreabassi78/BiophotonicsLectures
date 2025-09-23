@@ -13,7 +13,7 @@ Simulates the propagation of a field using Rayleight-Sommerfield integrals
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy import pi, sqrt, exp
-from numpy.fft import fft2,ifft2, ifftshift
+from numpy.fft import fft2, ifft2, ifftshift
 
 
 def kernelRS(X, Y, z, wavelength, n):
