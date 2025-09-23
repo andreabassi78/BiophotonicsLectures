@@ -19,15 +19,14 @@ w = 0.02
 g = np.exp((-X**2-Y**2)/w**2)
 
 
-G = fftshift(fft2(ifftshift(g))) # Transfer function
+G = fftshift(fft2(g)) # Transfer function
 
-#G_magnitute = np.abs(G)
-
+# G_magnitute = np.abs(G)
 #G_inverted = 1 - G_magnitute/np.amax(G_magnitute)  # create a high pass filter
 
 C = G*F
 
-c = ifft2(C)
+c = ifftshift(ifft2(C))
 
 
 plt.figure()
