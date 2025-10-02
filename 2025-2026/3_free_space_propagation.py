@@ -2,7 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from numpy import pi, sqrt, exp
 from numpy.fft import fft2, ifft2, ifftshift
-                        
+
+def kernelRS(x,y,z,wavelength,n):
+    k = n/wavelength
+    r = sqrt(x**2+y**2+z**2)
+    return -1.j*k*z *exp(1.j *2* pi*k*r)/r**2 *(1 + 1.j/(2*pi*k*r) )
+
 um = 1.0
 wavelength = 0.532 * um 
 n = 1
@@ -20,3 +25,10 @@ side = 30 * um
 indexes = (np.abs(X)>side/2) | (np.abs(Y)>side/2)
 E0[indexes] = 0
 
+z = 1000*um
+D = kernelRS(X,Y,z,wavelength,n)
+
+E1 = ifftshift(ifft2(fft2(E0)*fft2(D)))
+
+plt.imshow(np.abs(E1))
+plt.show()
