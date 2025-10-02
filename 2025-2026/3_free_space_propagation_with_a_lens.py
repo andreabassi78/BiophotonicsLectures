@@ -102,7 +102,7 @@ D2 = kernelRS(X, Y, z2, wavelength, n)
 E2 = ifftshift( ifft2 (fft2(E1_plus) * fft2(D2) ) )
 
 #%% show the fields as intensity, phase or real part
-plt.rcParams['figure.dpi'] = 300
+plt.rcParams['figure.dpi'] = 150
 show_fields(fields = (E0,E1_minus,E2),
             titles = ('E0','E1-','E2'),
             kind = 'abs',
