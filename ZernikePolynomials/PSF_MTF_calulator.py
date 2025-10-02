@@ -47,8 +47,8 @@ ky = YP * k / f
 k_rho = np.sqrt(kx**2 + ky**2)
 k_theta = np.arctan2(ky,kx)
 
-N = 4 # Zernike radial order 
-M = 0 # Zernike azimutal frequency
+N = 3 # Zernike radial order 
+M = 1 # Zernike azimutal frequency
 
 phase = nm_polynomial(N, M, k_rho/k_cut_off, k_theta, normalized = False) 
 

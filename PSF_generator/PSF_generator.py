@@ -19,7 +19,7 @@ wavelength = 0.532*um
 f = 10*mm # focal length of the objective lens
 a = 4*mm  # radius of the the pupil
 k = n/wavelength # wavenumber
-NA = n*(a/f) # Numerical aperture
+NA = n*np.sin(a/f) # Numerical aperture
 
 # define the space at the pupil
 b = 15 * mm 

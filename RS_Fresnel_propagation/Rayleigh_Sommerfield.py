@@ -65,6 +65,7 @@ def show_fields( fields, titles, kind = 'intensity', extent = (-50,50,-50,50) ):
                      title = titles[idx],
                      ) 
     plt.show()
+    
                           
 um = 1.0
 wavelength = 0.532 * um 
@@ -86,7 +87,7 @@ ky = 0.0
 #E0 = np.cos(2*pi* (kx*X+ky*Y)) 
 
 """ insert a square mask """
-side = 30 * um
+side = 400 * um
 indexes = (np.abs(X)>side/2) | (np.abs(Y)>side/2)
 E0[indexes] = 0
 

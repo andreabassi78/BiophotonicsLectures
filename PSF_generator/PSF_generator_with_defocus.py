@@ -39,11 +39,15 @@ ATF = np.ones([Npixels, Npixels])
 z = 5.0*um
 kz = np.sqrt(k**2-k_perpendicular**2)
 angular_spectrum_propagator = np.exp(1.j*2*pi*kz*z)
-ATF = ATF * angular_spectrum_propagator
+
 
 # cut frequencies outside of the cut off
 cut_idx = (k_perpendicular >= k_cut_off) 
 ATF[cut_idx] = 0
+
+
+ATF = ATF * angular_spectrum_propagator
+
 
 ASF = ifftshift(ifft2(fftshift(ATF))) # Amplitude Spread Function   
 PSF = np.abs(ASF)**2 # Point Spread Function  
