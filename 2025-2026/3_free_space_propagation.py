@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from numpy import pi, sqrt, exp
+from numpy import pi, sqrt, exp, cos
 from numpy.fft import fft2, ifft2, ifftshift
 
 def kernelRS(x,y,z,wavelength,n):
@@ -18,7 +18,19 @@ x = y = np.linspace(-L/2, +L/2, Nsamples)
 X, Y = np.meshgrid(x,y)
 
 """ create a constant field E0 (plane wave propagating along z)"""
-E0 = np.ones([Nsamples, Nsamples])
+# E0 = np.ones([Nsamples, Nsamples])
+
+
+"""create a co-sinusoidal field E0 (interference of 2 plane waves at a certain angle)"""
+#kx = 0.2 /um
+#ky = 0.0 /um
+#E0 = cos(2*pi*(kx*X+ky*Y))
+
+"""create a costant field E0 at a certain angle"""
+kx = 0.2 /um
+ky = 0.0 /um
+E0 = exp(1.j*2*pi*(kx*X+ky*Y))
+
 
 """ insert a square mask """
 side = 30 * um
