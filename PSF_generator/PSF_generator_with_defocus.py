@@ -43,11 +43,12 @@ angular_spectrum_propagator = np.exp(1.j*2*pi*kz*z)
 
 # cut frequencies outside of the cut off
 cut_idx = (k_perpendicular >= k_cut_off) 
-ATF[cut_idx] = 0
+
 
 
 ATF = ATF * angular_spectrum_propagator
 
+ATF[cut_idx] = 0
 
 ASF = ifftshift(ifft2(fftshift(ATF))) # Amplitude Spread Function   
 PSF = np.abs(ASF)**2 # Point Spread Function  
