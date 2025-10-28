@@ -6,6 +6,7 @@ as a quadratic phase mask
 
 @author: Andrea Bassi
 """
+import PySpin
 
 import numpy as np
 from numpy import pi, exp, sqrt

@@ -17,7 +17,7 @@ NA = 0.8 # numerical aperture
 wavelength = 0.520 * um
 K = n / wavelength
 
-Detection_Mode = 'standard'
+Detection_Mode = 'stardard'
 # choose between 'standard' and '4pi'
 
 Microscope_Type = 'aberrated'
