@@ -35,17 +35,19 @@ k_cut_off = NA/wavelength # cut off frequency in the coherent case
 ATF = np.ones([Npixels, Npixels])                  
 
 # add astigmatism 
-rho   = k_perpendicular / k_cut_off #  normalized pupil coordinates in k-space
+#R_pupil_eff    = 3.0e-3      # [m] effective entrance pupil radius at the cylinder
+f_cyl_m        = 1.0         # [m] focal length of the cylindrical lens
+
+rho   = kx / k_cut_off
 theta = np.arctan2(ky, kx)
 
-Z_22 = (rho**2) * np.cos(2.0*(theta)) # Zernike polynomial of order n=2, m=2: Z_2^2(ρ,θ) = ρ^2 cos[2(θ)]
-weight = 0.5      # e.g. 0.5 waves (λ/2) of primary astigmatism at ρ=1
-phi_ast = 2.0*np.pi * weight * Z_22
+xprime = rho
+phi_cyl = (2.0*np.pi / wavelength) * (xprime**2) / (2.0 * f_cyl_m)
 
-ATF = ATF * np.exp(1j * phi_ast)
+ATF = ATF * np.exp(1j * phi_cyl)
 
 # add defocus
-z = 5*um
+z = 0*um
 kz = np.sqrt(k**2-k_perpendicular**2)
 angular_spectrum_propagator = np.exp(1.j*2*pi*kz*z)
 ATF = ATF * angular_spectrum_propagator
