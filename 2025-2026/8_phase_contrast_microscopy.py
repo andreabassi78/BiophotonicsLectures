@@ -41,14 +41,15 @@ indexes = np.sqrt(KX**2+KY**2)<k_cut_off
 ATF[indexes] = 1
 
 # add a Zernike pupil
-# epsilon = ....
-#
-#
+#epsilon = 0.05*k_cut_off
+#indexes = np.sqrt(KX**2+KY**2)<epsilon
+#ATF[indexes] *= np.exp(1.j*np.pi/2)
+#ATF[indexes] *= 0.3 # phase attenuation
+
 
 # add a Schlieren pupil
-##
-#
-#
+indexes = KX>0 # & (np.sqrt(KX**2+KY**2)<k_cut_off)
+ATF[indexes] = 0
 
 # Calculate the Amplitude Spread Function
 ASF = ifftshift(ifft2(fftshift(ATF)))
