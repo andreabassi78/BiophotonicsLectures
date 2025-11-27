@@ -7,7 +7,8 @@ Delta_lambda = 0.2*um # Bandwidth of the source
 n = 1.33 # refractive index at the sample (and at the reference mirror)
 k0 = n / lambda0 # wavenumber
 
-# Calculate the coherence length from the wavelength bandwidth
+# Calculate the coherence length corresponding to the given wavelength bandwidth
+# we define Lc as 1/(Δk)
 Lc = lambda0**2 / (n * Delta_lambda)
 
 # z-axis for optical path difference: covers some coherence lengths on each side

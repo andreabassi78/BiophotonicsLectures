@@ -24,7 +24,7 @@ Gamma = np.exp(-(z/sigma)**2) * np.cos(2*np.pi*k0*z)
 
 # defined a sample reflecity r(z) as 3 delta funtions in depth
 r = np.zeros_like(z)
-depths = [-5*um, 10*um, 15*um]   
+depths = [-3*um, 15*um, 25*um]   
 amplitudes = [1.0, 0.5, 0.8]
 for depth, amp in zip(depths, amplitudes):
     idx = (np.abs(z - depth)).argmin()
@@ -32,9 +32,9 @@ for depth, amp in zip(depths, amplitudes):
 
 
 # calculater the interference signal as the convolution of r(z) and Gamma(z)
-I_SR = 1 + np.convolve(r, Gamma, mode='same') * (z[1] - z[0])
-
-
+I_SR = np.convolve(r, Gamma, mode='same') * (z[1] - z[0])
+I_SR_max= np.max(I_SR)  # normalize
+I_SR = 1+I_SR /2/I_SR_max
 # Power spectrum S(k) via FFT
 dz = z[1] - z[0]
 S_k = np.fft.fft(np.fft.ifftshift(I_SR))
