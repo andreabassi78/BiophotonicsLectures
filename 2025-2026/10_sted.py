@@ -29,9 +29,9 @@ wavelength = 0.5
 delta = np.pi*NA/wavelength*x
 
 Iexc = np.cos(delta)**2 # excitation has the first zero in lambda/2NA
-Isted = np.sin(delta)**2 +0.002 # sted has the first zero in lambda/2NA
+Isted = np.sin(delta)**2  # sted has the first zero in lambda/2NA
 
-ratio = 200 # I_STED_max / I_Sat
+ratio = 20 # I_STED_max / I_Sat
 
 PSF = Iexc * np.exp( -ratio * Isted )
 PSF_approx = 1 - (ratio+1) * (delta)**2
