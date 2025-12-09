@@ -1,14 +1,12 @@
 import numpy as np
+from numpy import pi, log, sqrt
 import matplotlib.pyplot as plt
 
 um = 1.0  # micrometer unit
 lambda0 = 1*um     # central wavelength
-Delta_lambda = 0.2*um # Bandwidth of the source
 n = 1.33 # refractive index at the sample (and at the reference mirror)
 k0 = n / lambda0 # wavenumber
-
-# Calculate the coherence length from the wavelength bandwidth
-Lc = lambda0**2 / (n * Delta_lambda)
+Lc = 2.0*um  # coherence length
 
 # z-axis for optical path difference: covers some coherence lengths on each side
 z_min = -32.0*um
@@ -16,7 +14,8 @@ z_max =  32.0*um
 N = 4095  # number of points
 z = np.linspace(z_min, z_max, N)
 
-# Coherence function defined as a Gaussian envelope with waist = Lc/2
+# Coherence function defined as a Gaussian envelope with FWHM = Lc
+sigma = Lc / (2*sqrt(log(2)))
 sigma = Lc / 2
 Gamma = np.exp(-(z/sigma)**2) * np.cos(2*np.pi*k0*z)
 
@@ -27,9 +26,12 @@ S_k = np.fft.fftshift(S_k)
 
 # Spatial frequency axis k (cycles/µm)
 k_axis = np.fft.fftshift(np.fft.fftfreq(N, d=dz))
-P_k = np.real(S_k)
+P_k = np.abs(S_k)
 
-Delta_k = 1 / Lc  # predicted Δk
+# Bandwidth calculations
+Delta_k = 4*log(2) / (pi* Lc)   # Δk obtained as the FWHM of the Gaussian function (Fourier transform of the coherence function)
+sigma_k = 2 / (pi*Lc)                 # Δk obtained as the width at 1/e of the Gaussian function (Fourier transform of the coherence function)   
+sigma_lambda = sigma_k * lambda0**2 / n  # Δλ
 
 # Convert S(k) to wavelength-domain spectrum S(λ)
 mask = k_axis > 0
@@ -47,28 +49,28 @@ plt.plot(z, Gamma)
 plt.title(f"Coherence function Γ(z)\nLc = {Lc:.2f} µm (2σ)")
 plt.xlabel("z (µm)")
 plt.ylabel("Amplitude (a.u.)")
-plt.axvline(-sigma, color='k', linestyle=':', linewidth=1)
-plt.axvline( sigma, color='k', linestyle=':', linewidth=1)
+plt.axvline(-Lc/2, color='k', linestyle=':', linewidth=1)
+plt.axvline( Lc/2, color='k', linestyle=':', linewidth=1)
 plt.grid(True, linestyle=":", linewidth=0.5)
 
 plt.figure()
 plt.plot(k_axis, P_k)
-plt.title("Power spectrum S(k)")
+plt.title("Power spectrum S(k), bandwidth Δk = {:.3f} 1/µm".format(2*sigma_k))
 plt.xlabel("k (1/µm)")
 plt.ylabel("S(k) (a.u.)")
-plt.axvline(k0 - Delta_k/2, color='k', linestyle=':', linewidth=1)
-plt.axvline(k0 + Delta_k/2, color='k', linestyle=':', linewidth=1)
+plt.axvline(k0 - sigma_k, color='k', linestyle=':', linewidth=1)
+plt.axvline(k0 + sigma_k, color='k', linestyle=':', linewidth=1)
 plt.grid(True, linestyle=":", linewidth=0.5)
 plt.xlim(0, 2*k0)
 
 plt.figure()
 plt.plot(lambda_axis, P_lambda)
-plt.title("Power spectrum S(λ)")
+plt.title("Power spectrum S(λ), bandwidth Δλ = {:.1f} nm".format(2*sigma_lambda*1e3))
 plt.xlabel("λ (µm)")
 plt.ylabel("S(λ) (a.u.)")
 plt.grid(True, linestyle=":", linewidth=0.5)
-plt.axvline(lambda0 - Delta_lambda/2, color='k', linestyle=':', linewidth=1)
-plt.axvline(lambda0 + Delta_lambda/2, color='k', linestyle=':', linewidth=1)
-plt.xlim(lambda0 - 0.5, lambda0 + 0.5)
+plt.axvline(lambda0 - sigma_lambda, color='k', linestyle=':', linewidth=1)
+plt.axvline(lambda0 + sigma_lambda, color='k', linestyle=':', linewidth=1)
+plt.xlim(0, 2*lambda0)
 
 plt.show()

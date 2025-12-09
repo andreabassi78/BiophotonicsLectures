@@ -1,8 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-
 um = 1.0  # micrometer unit
 lambda0 = 1*um     # central wavelength
 Delta_lambda = 0.2*um # Bandwidth of the source
@@ -25,7 +23,7 @@ Gamma = np.exp(-(z/sigma)**2) * np.cos(2*np.pi*k0*z)
 # defined a sample reflecity r(z) as 3 delta funtions in depth
 r = np.zeros_like(z)
 depths = [-3*um, 15*um, 25*um]   
-amplitudes = [1.0, 0.5, 0.8]
+amplitudes = [1.0, 0.5, 0.3]
 for depth, amp in zip(depths, amplitudes):
     idx = (np.abs(z - depth)).argmin()
     r[idx] = amp            
@@ -33,12 +31,10 @@ for depth, amp in zip(depths, amplitudes):
 
 # calculater the interference signal as the convolution of r(z) and Gamma(z)
 I_SR = np.convolve(r, Gamma, mode='same') * (z[1] - z[0])
-I_SR_max= np.max(I_SR)  # normalize
-I_SR = 1+I_SR /2/I_SR_max
 # Power spectrum S(k) via FFT
 dz = z[1] - z[0]
 S_k = np.fft.fft(np.fft.ifftshift(I_SR))
-S_k = np.fft.fftshift(S_k)
+S_k = np.real(np.fft.fftshift(S_k))
 
 # Spatial frequency axis k (cycles/µm)
 k_axis = np.fft.fftshift(np.fft.fftfreq(N, d=dz))
@@ -56,6 +52,12 @@ P_lambda = P_k[mask]
 order = np.argsort(lambda_axis)
 lambda_axis = lambda_axis[order]
 P_lambda = P_lambda[order]
+
+
+# recover the A-scan by inverse FFT of S(k)
+I_SR_recovered = np.fft.ifftshift(np.fft.ifft(np.fft.ifftshift(S_k)))
+I_SR_recovered = np.abs(I_SR_recovered) * N * dz       
+
 
 plt.figure()
 plt.plot(z, I_SR)
@@ -86,4 +88,13 @@ plt.axvline(lambda0 - Delta_lambda/2, color='k', linestyle=':', linewidth=1)
 plt.axvline(lambda0 + Delta_lambda/2, color='k', linestyle=':', linewidth=1)
 plt.xlim(lambda0 - 0.5*lambda0, lambda0 + 0.5*lambda0)
 
+
+#plot the recovered A-scan
+plt.figure()            
+plt.plot(z, I_SR_recovered)
+plt.title("Recovered A-scan from S(k)")     
+plt.xlabel("z (µm)")
+plt.ylabel("Amplitude (a.u.)")
+plt.grid(True, linestyle=":", linewidth=0.5)
+plt.xlim(z_min, z_max)
 plt.show()
