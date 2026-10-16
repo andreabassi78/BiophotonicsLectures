@@ -6,7 +6,6 @@ as a quadratic phase mask
 
 @author: Andrea Bassi
 """
-import PySpin
 
 import numpy as np
 from numpy import pi, exp, sqrt
@@ -68,13 +67,13 @@ um = 1.0
       
 n = 1
 wavelength = 0.532 * um 
-z1 = 300 * um
-z2 = 300 * um 
+z1 = 200 * um
+z2 = 200 * um 
 
 k = n / wavelength
 
 Nsamples = 1024 # number of pixels
-L = 200 * um # extent of the xy space
+L = 300 * um # extent of the xy space
 x = y = np.linspace(-L/2, +L/2, Nsamples)
 X, Y = np.meshgrid(x,y)
 
@@ -92,7 +91,7 @@ D1 = kernelRS(X, Y, z1, wavelength, n)
 E1_minus = ifftshift( ifft2 (fft2(E0) * fft2(D1) ) )
 
 # %%calculate E1_plus, the field just after the lens
-f = 300 *um
+f = 200 *um
 lens = np.exp(- 1.j * 2 * pi * k * ((X**2 / (2 * f)) + Y**2 / (2 * f)))
 E1_plus = E1_minus * lens 
 

@@ -18,7 +18,7 @@ x = y = np.linspace(-L/2, +L/2, Nsamples)
 X, Y = np.meshgrid(x,y)
 
 """ create a constant field E0 (plane wave propagating along z)"""
-E0 = np.ones([Nsamples, Nsamples])
+# E0 = np.ones([Nsamples, Nsamples])
 
 """create a co-sinusoidal field E0 (interference of 2 plane waves at a certain angle)
 If kx = 0.2 /um and ky = 0.0 /um, then the angle of propagation is theta = arcsin(kx/k) = 5.73 degrees
@@ -29,9 +29,9 @@ the period of the interference pattern is 1/kx = 5 um
 #E0 = cos(2*pi*(kx*X+ky*Y))
 
 """create a costant field E0 at a certain angle"""
-#kx = 0.2 /um 
-#ky = 0.0 /um
-#E0 = exp(1.j*2*pi*(kx*X+ky*Y))
+kx = 0.2 /um 
+ky = 0.0 /um
+E0 = exp(1.j*2*pi*(kx*X+ky*Y))
 
 
 """ insert a square mask """
@@ -43,6 +43,9 @@ z = 1000*um
 D = kernelRS(X,Y,z,wavelength,n)
 
 E1 = ifftshift(ifft2(fft2(E0)*fft2(D)))
+
+plt.imshow(np.abs(E0))
+plt.show()
 
 plt.imshow(np.abs(E1))
 plt.show()
